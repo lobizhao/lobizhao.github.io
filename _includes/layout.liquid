@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <title>{{ title }}</title>
+  <link href="https://unpkg.com/prismjs@1.20.0/themes/prism-okaidia.css" rel="stylesheet" />
+  <link href="/css/main.css" rel="stylesheet">
+  <script src="/js/modal.js" defer></script>
+  <script src="/js/toc_observer.js" defer></script>
+  <script src="/js/video_image_observer.js" defer></script>
+</head>
+
+<body>
+
+  <div id="modal">
+    <img id="modal-image">
+    <video id="modal-video" preload="none" autoplay muted loop playsinline>
+      <source>
+      <source>
+    </video>
+  </div>
+
+  {{ content }}
+</body>
+
+</html>

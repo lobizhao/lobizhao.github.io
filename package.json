@@ -1,0 +1,22 @@
+{
+  "scripts": {
+    "watch:sass": "sass --watch css:_site/css",
+    "build:sass": "sass css:_site/css",
+    "watch:eleventy": "eleventy --serve",
+    "build:eleventy": "eleventy",
+    "dev": "npm-run-all build:* --parallel watch:*",
+    "build": "npm-run-all build:*"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
+    "npm-run-all": "^4.1.5",
+    "sass": "^1.69.5",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^8.6.7",
+    "markdown-it-toc-done-right": "^4.2.0"
+  }
+}

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <title>Lobi's Page</title>
+  <link href="https://unpkg.com/prismjs@1.20.0/themes/prism-okaidia.css" rel="stylesheet" />
+  <link href="/css/main.css" rel="stylesheet">
+  <script src="/js/modal.js" defer></script>
+  <script src="/js/toc_observer.js" defer></script>
+  <script src="/js/video_image_observer.js" defer></script>
+</head>
+
+<body>
+
+  <div id="modal">
+    <img id="modal-image">
+    <video id="modal-video" preload="none" autoplay muted loop playsinline>
+      <source>
+      <source>
+    </video>
+  </div>
+
+  <div id='root'>
+<div id='catalog'>
+<nav class="toc"><ul><li><a href="#jiangman-zhao">Jiangman Zhao</a></li><li><a href="#project">project</a><ul><li><a href="#shading">shading</a><ul><li><a href="#car-painting-commercialize">Car painting commercialize</a></li><li><a href="#card-battle">Card battle</a></li></ul></li><li><a href="#rigging">rigging</a><ul><li><a href="#facial-rigging">Facial rigging</a></li><li><a href="#dynamic-bone">Dynamic bone</a></li></ul></li><li><a href="#grooming">grooming</a></li><li><a href="#modeling">modeling</a><ul><li><a href="#chess-game-online">chess Game Online</a></li><li><a href="#substance-workflow">substance workflow</a></li><li><a href="#photoscan-workflow">PhotoScan workflow</a></li></ul></li><li><a href="#patent">patent</a><ul><li><a href="#terrain-shadow-case">terrain shadow case</a></li><li><a href="#element-shadow-case">element shadow case</a></li><li><a href="#elements-batch">elements batch</a></li></ul></li></ul></li><li><a href="#about-me">about me</a><ul><li><a href="#education">education</a></li><li><a href="#skills">skills</a></li><li><a href="#introduce">introduce</a></li></ul></li><li><a href="#contact">Contact</a></li></ul></nav></div>
+<div id='content'>
+<h2 id="jiangman-zhao" tabindex="-1">Jiangman Zhao</h2>
+<h2 id="project" tabindex="-1">project</h2>
+<h3 id="shading" tabindex="-1">shading</h3>
+<h4 id="car-painting-commercialize" tabindex="-1">Car painting commercialize</h4>
+<ul>
+<li>Shading in Unity engine.</li>
+</ul>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/car/MainScene.webp" title="car painting" alt="" />
+        <figcaption>Car Scene</figcaption>
+    </figure>
+</div>
+<ul>
+<li>Using Substance create a distance map, shading to mimic the shape of a flame.</li>
+</ul>
+<div class='media-group'>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/car/bakeDistanceMap.webp" title="substance bake" alt="" />
+        <figcaption>bakeDistance</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <div>
+            <video class="zoomable" preload="none" poster="assets/video/showCase_poster.webp" muted loop playsinline>
+                <source src="assets/video/showCase.webm" type="video/webm">
+                <source src="assets/video/showCase.mp4" type="video/mp4">
+            </video><img class="loading" src="assets/image/loading.webp" />
+        </div>
+        <figcaption>Red Flame</figcaption>
+    </figure>
+</div>
+</div>
+<pre class="language-hlsl"><code class="language-hlsl"><span class="token comment">//////////////////// fragment shader snippet ////////////////////</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token keyword">float</span> speed <span class="token operator">=</span> <span class="token function">frac</span><span class="token punctuation">(</span>_Time<span class="token punctuation">.</span>x <span class="token operator">*</span> <span class="token operator">+</span> _lavaSpeed<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">float4</span> wave <span class="token operator">=</span> <span class="token function">tex2D</span><span class="token punctuation">(</span>_lavawaveTex<span class="token punctuation">,</span> <span class="token punctuation">(</span>i<span class="token punctuation">.</span>texcoord<span class="token punctuation">.</span>zw <span class="token operator">+</span> <span class="token keyword">float2</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> speed<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+wave <span class="token operator">=</span> wave<span class="token punctuation">.</span>r <span class="token operator">*</span> _lavaWave<span class="token punctuation">;</span>
+<span class="token keyword">float4</span> gas <span class="token operator">=</span> <span class="token function">tex2D</span><span class="token punctuation">(</span>_lavawaveTex<span class="token punctuation">,</span> <span class="token keyword">float2</span><span class="token punctuation">(</span>i<span class="token punctuation">.</span>texcoord<span class="token punctuation">.</span>z <span class="token operator">*</span> _gasOffset<span class="token punctuation">.</span>x<span class="token punctuation">,</span> i<span class="token punctuation">.</span>texcoord<span class="token punctuation">.</span>w <span class="token operator">*</span> _gasOffset<span class="token punctuation">.</span>y <span class="token operator">+</span> <span class="token function">frac</span><span class="token punctuation">(</span>_Time<span class="token punctuation">.</span>y <span class="token operator">*</span> <span class="token operator">+</span> _gasOffset<span class="token punctuation">.</span>z<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">float4</span> lava <span class="token operator">=</span> <span class="token function">tex2D</span><span class="token punctuation">(</span>_lavaTex<span class="token punctuation">,</span> <span class="token keyword">float2</span><span class="token punctuation">(</span>i<span class="token punctuation">.</span>texcoord<span class="token punctuation">.</span>zw <span class="token operator">+</span> wave<span class="token punctuation">.</span>xy<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">float4</span> mask <span class="token operator">=</span> <span class="token function">tex2D</span><span class="token punctuation">(</span>_lavaTex<span class="token punctuation">,</span> i<span class="token punctuation">.</span>texcoord<span class="token punctuation">.</span>zw<span class="token punctuation">)</span><span class="token punctuation">;</span>
+lava <span class="token operator">=</span> <span class="token punctuation">(</span>lava<span class="token punctuation">.</span>r <span class="token operator">+</span> gas<span class="token punctuation">.</span>g <span class="token operator">*</span> _gasOffset<span class="token punctuation">.</span>w<span class="token punctuation">)</span> <span class="token operator">*</span> _lavaCol <span class="token operator">*</span> mask<span class="token punctuation">.</span>g<span class="token punctuation">;</span>
+
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></code></pre>
+<ul>
+<li>Other types of car paint.</li>
+</ul>
+<div class='media-group'>
+<div class="media-container ">
+    <figure>
+        <div>
+            <video class="zoomable" preload="none" poster="assets/video/showcase3_poster.webp" muted loop playsinline>
+                <source src="assets/video/showcase3.webm" type="video/webm">
+                <source src="assets/video/showcase3.mp4" type="video/mp4">
+            </video><img class="loading" src="assets/image/loading.webp" />
+        </div>
+        <figcaption>Lava Storm</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <div>
+            <video class="zoomable" preload="none" poster="assets/video/showcase4_poster.webp" muted loop playsinline>
+                <source src="assets/video/showcase4.webm" type="video/webm">
+                <source src="assets/video/showcase4.mp4" type="video/mp4">
+            </video><img class="loading" src="assets/image/loading.webp" />
+        </div>
+        <figcaption>Edge Loop</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <div>
+            <video class="zoomable" preload="none" poster="assets/video/showcase5_poster.webp" muted loop playsinline>
+                <source src="assets/video/showcase5.webm" type="video/webm">
+                <source src="assets/video/showcase5.mp4" type="video/mp4">
+            </video><img class="loading" src="assets/image/loading.webp" />
+        </div>
+        <figcaption>Dragon Scale</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <div>
+            <video class="zoomable" preload="none" poster="assets/video/showcase7_poster.webp" muted loop playsinline>
+                <source src="assets/video/showcase7.webm" type="video/webm">
+                <source src="assets/video/showcase7.mp4" type="video/mp4">
+            </video><img class="loading" src="assets/image/loading.webp" />
+        </div>
+        <figcaption>Stripe</figcaption>
+    </figure>
+</div>
+</div>
+<ul>
+<li>Stylized cloud material.</li>
+</ul>
+<div class='media-group'>
+<div class="media-container ">
+    <figure>
+        <div>
+            <video class="zoomable" preload="none" poster="assets/video/stylizedCloud01_poster.webp" muted loop playsinline>
+                <source src="assets/video/stylizedCloud01.webm" type="video/webm">
+                <source src="assets/video/stylizedCloud01.mp4" type="video/mp4">
+            </video><img class="loading" src="assets/image/loading.webp" />
+        </div>
+        <figcaption>stylized Multiple Pass</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <div>
+            <video class="zoomable" preload="none" poster="assets/video/stylizedCloud02_poster.webp" muted loop playsinline>
+                <source src="assets/video/stylizedCloud02.webm" type="video/webm">
+                <source src="assets/video/stylizedCloud02.mp4" type="video/mp4">
+            </video><img class="loading" src="assets/image/loading.webp" />
+        </div>
+        <figcaption>vertex Noise</figcaption>
+    </figure>
+</div>
+</div>
+<pre class="language-hlsl"><code class="language-hlsl"><span class="token comment">//////////////////// vertex shader snippet ////////////////////</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token comment">// make noise in worldSpace</span>
+<span class="token keyword">float</span> speed <span class="token operator">=</span> <span class="token function">frac</span><span class="token punctuation">(</span>_Time<span class="token punctuation">.</span>y <span class="token operator">*</span> _speed<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">float3</span> blend <span class="token operator">=</span> v<span class="token punctuation">.</span>vertex<span class="token punctuation">.</span>xyz <span class="token operator">*</span> _scale<span class="token punctuation">;</span>
+<span class="token keyword">float4</span> noiseXY <span class="token operator">=</span> <span class="token function">tex2Dlod</span><span class="token punctuation">(</span>_Noise<span class="token punctuation">,</span> <span class="token keyword">float4</span><span class="token punctuation">(</span>blend<span class="token punctuation">.</span>xy <span class="token operator">+</span> speed<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">float4</span> noiseYZ <span class="token operator">=</span> <span class="token function">tex2Dlod</span><span class="token punctuation">(</span>_Noise<span class="token punctuation">,</span> <span class="token keyword">float4</span><span class="token punctuation">(</span>blend<span class="token punctuation">.</span>yz <span class="token operator">+</span> speed<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">float4</span> noiseXZ <span class="token operator">=</span> <span class="token function">tex2Dlod</span><span class="token punctuation">(</span>_Noise<span class="token punctuation">,</span> <span class="token keyword">float4</span><span class="token punctuation">(</span>blend<span class="token punctuation">.</span>xz <span class="token operator">+</span> speed<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">float4</span> noise <span class="token operator">=</span> noiseXY<span class="token punctuation">;</span>
+
+<span class="token comment">// lerp</span>
+noise <span class="token operator">=</span> <span class="token function">lerp</span><span class="token punctuation">(</span>noise<span class="token punctuation">,</span> noiseXZ<span class="token punctuation">,</span> o<span class="token punctuation">.</span>normal<span class="token punctuation">.</span>y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+noise <span class="token operator">=</span> <span class="token function">lerp</span><span class="token punctuation">(</span>noise<span class="token punctuation">,</span> noiseYZ<span class="token punctuation">,</span> o<span class="token punctuation">.</span>normal<span class="token punctuation">.</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
+o<span class="token punctuation">.</span>color <span class="token operator">=</span> v<span class="token punctuation">.</span>color<span class="token punctuation">;</span>
+noise <span class="token operator">*=</span> o<span class="token punctuation">.</span>color<span class="token punctuation">;</span>
+
+<span class="token comment">//noise plus v.vertex</span>
+v<span class="token punctuation">.</span>vertex <span class="token operator">+=</span> v<span class="token punctuation">.</span>normal <span class="token operator">*</span> <span class="token punctuation">(</span>noise <span class="token operator">*</span> _range<span class="token punctuation">)</span><span class="token punctuation">;</span>
+o<span class="token punctuation">.</span>pos <span class="token operator">=</span> <span class="token function">UnityObjectToClipPos</span><span class="token punctuation">(</span>v<span class="token punctuation">.</span>vertex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></code></pre>
+<ul>
+<li>Liquid wave material.</li>
+</ul>
+<div class='media-group'>
+<div class="media-container ">
+    <figure>
+        <div>
+            <video class="zoomable" preload="none" poster="assets/video/WaveWater1_poster.webp" muted loop playsinline>
+                <source src="assets/video/WaveWater1.webm" type="video/webm">
+                <source src="assets/video/WaveWater1.mp4" type="video/mp4">
+            </video><img class="loading" src="assets/image/loading.webp" />
+        </div>
+        <figcaption></figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <div>
+            <video class="zoomable" preload="none" poster="assets/video/WaveWater2_poster.webp" muted loop playsinline>
+                <source src="assets/video/WaveWater2.webm" type="video/webm">
+                <source src="assets/video/WaveWater2.mp4" type="video/mp4">
+            </video><img class="loading" src="assets/image/loading.webp" />
+        </div>
+        <figcaption></figcaption>
+    </figure>
+</div>
+</div>
+<pre class="language-hlsl"><code class="language-hlsl">fixed4 <span class="token function">frag</span><span class="token punctuation">(</span>v2f i<span class="token punctuation">)</span> <span class="token operator">:</span> SV_Target
+<span class="token punctuation">{</span>
+    <span class="token comment">// WAVE cubemap</span>
+    <span class="token keyword">float</span> speed <span class="token operator">=</span> <span class="token function">frac</span><span class="token punctuation">(</span>_Time<span class="token punctuation">.</span>y <span class="token operator">*</span> _speed<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">float3</span> flowDir <span class="token operator">=</span> <span class="token function">tex2D</span><span class="token punctuation">(</span>_fmap<span class="token punctuation">,</span> <span class="token keyword">float2</span><span class="token punctuation">(</span>i<span class="token punctuation">.</span>texcoord<span class="token punctuation">.</span>x <span class="token operator">*</span> _offset<span class="token punctuation">.</span>x <span class="token operator">+</span> speed<span class="token punctuation">,</span> i<span class="token punctuation">.</span>texcoord<span class="token punctuation">.</span>y <span class="token operator">*</span> _offset<span class="token punctuation">.</span>y<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    flowDir <span class="token operator">*=</span> _strength<span class="token punctuation">;</span>
+    <span class="token keyword">float</span> offset0 <span class="token operator">=</span> <span class="token function">frac</span><span class="token punctuation">(</span>_Time<span class="token punctuation">.</span>w <span class="token operator">*</span> <span class="token number">0.5</span> <span class="token operator">+</span> <span class="token number">0.5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">float</span> offset1 <span class="token operator">=</span> <span class="token function">frac</span><span class="token punctuation">(</span>_Time<span class="token punctuation">.</span>w <span class="token operator">*</span> <span class="token number">0.5</span> <span class="token operator">+</span> <span class="token number">1.0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">float</span> offsetlerp <span class="token operator">=</span> <span class="token function">abs</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">0.5</span> <span class="token operator">-</span> offset0<span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">0.5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fixed4 msk <span class="token operator">=</span> <span class="token function">tex2D</span><span class="token punctuation">(</span>_MaskTex<span class="token punctuation">,</span> i<span class="token punctuation">.</span>texcoord<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fixed4 refl0 <span class="token operator">=</span> <span class="token function">tex2Dproj</span><span class="token punctuation">(</span>_ReflectionTex<span class="token punctuation">,</span> <span class="token function">UNITY_PROJ_COORD</span><span class="token punctuation">(</span>i<span class="token punctuation">.</span>refl<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token keyword">float4</span><span class="token punctuation">(</span>flowDir<span class="token punctuation">.</span>xy <span class="token operator">*</span> offset0<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fixed4 refl1 <span class="token operator">=</span> <span class="token function">tex2Dproj</span><span class="token punctuation">(</span>_ReflectionTex<span class="token punctuation">,</span> <span class="token function">UNITY_PROJ_COORD</span><span class="token punctuation">(</span>i<span class="token punctuation">.</span>refl<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token keyword">float4</span><span class="token punctuation">(</span>flowDir<span class="token punctuation">.</span>xy <span class="token operator">*</span> offset1<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fixed4 refl <span class="token operator">=</span> <span class="token function">lerp</span><span class="token punctuation">(</span>refl0<span class="token punctuation">,</span> refl1<span class="token punctuation">,</span> offsetlerp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    refl<span class="token punctuation">.</span>a <span class="token operator">*=</span> msk<span class="token punctuation">.</span>r <span class="token operator">*</span> _Alpha <span class="token operator">*</span> i<span class="token punctuation">.</span>color<span class="token punctuation">.</span>a<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> refl<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="card-battle" tabindex="-1">Card battle</h4>
+<ul>
+<li>In game low cost dynamic shadow</li>
+</ul>
+<div class='media-group'>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/card/ingame.webp" title="Battle screenshot" alt="" />
+        <figcaption>In game battle</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/card/FakeShadow.webp" title="FakeShadow" alt="" />
+        <figcaption>low cost shadow</figcaption>
+    </figure>
+</div>
+</div>
+<h3 id="rigging" tabindex="-1">rigging</h3>
+<h4 id="facial-rigging" tabindex="-1">Facial rigging</h4>
+<ul>
+<li>
+<p>Implemented digital human facial animation capture workflow, with the character photo-scanning a base model, using wrap4D topology based on MetaHuman’s facial mesh, Omniverse Audio2Face generation and capturing tracker data with Face Good, generating base poses, and completing the process in Unreal Engine 5 through refinement.</p>
+</li>
+<li>
+<p>Base on Unreal5 MetaHuman, rigging facial mesh in maya, modifying and generating new DNA source.</p>
+</li>
+</ul>
+<div class="media-container ">
+    <figure>
+        <video preload="none" poster="assets/video/FFriggingTest_poster.webp" controls>
+            <source src="assets/video/FFriggingTest.webm" type="video/webm">
+            <source src="assets/video/FFriggingTest.mp4" type="video/mp4">
+        </video>
+        <figcaption>FacialRiggingTest</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/grooming/FFriggingTest.webp" title="facialRigging" alt="" />
+        <figcaption>Facial Rigging</figcaption>
+    </figure>
+</div>
+<h4 id="dynamic-bone" tabindex="-1">Dynamic bone</h4>
+<ul>
+<li>Set in game hair Dynamic Bone.</li>
+</ul>
+<div class='media-group'>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/grooming/basehair.webp" title="base Hair" alt="" />
+        <figcaption></figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/grooming/HairRigging.webp" title="rigging" alt="" />
+        <figcaption></figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/grooming/DynamicBone.webp" title="set Unity dynamic bone" alt="" />
+        <figcaption></figcaption>
+    </figure>
+</div>
+</div>
+<h3 id="grooming" tabindex="-1">grooming</h3>
+<ul>
+<li>
+<p>Customized a digital human character hair workflow using Maya XGen for hair creation.</p>
+</li>
+<li>
+<p>Developed a visualization export tool for Maya hair assets to Unreal Engine using Qt Design and Python, simplifying the process of exporting hair cache files.</p>
+</li>
+</ul>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/grooming/longHairinMaya.webp" title="hair crate in maya" alt="" />
+        <figcaption>Create In Maya</figcaption>
+    </figure>
+</div>
+<ul>
+<li>Hair Rendering in Unreal Engine.</li>
+</ul>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/grooming/longhair_unreal.webp" title="rendering in Unreal Engine" alt="" />
+        <figcaption>Rendering In Unreal</figcaption>
+    </figure>
+</div>
+<ul>
+<li>Animal fur test. Baking vertex color on FurCard mesh blend base color fo body model in unreal engine</li>
+</ul>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/grooming/shortFurFox.webp" title="short fur for animal case" alt="" />
+        <figcaption>Short Fur</figcaption>
+    </figure>
+</div>
+<h3 id="modeling" tabindex="-1">modeling</h3>
+<h4 id="chess-game-online" tabindex="-1">chess Game Online</h4>
+<ul>
+<li>Modeling and drawing texture rendered in unity engine</li>
+</ul>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/modeling/MainScene.webp" title="avatar store" alt="" />
+        <figcaption>Avatar Store</figcaption>
+    </figure>
+</div>
+<div class='media-group'>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/modeling/GirlHair01.webp" title="girl style" alt="" />
+        <figcaption>Character HairStyle</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/modeling/Boyhair01.webp" title="boy hair style" alt="" />
+        <figcaption>Character HairStyle</figcaption>
+    </figure>
+</div>
+</div>
+<div class='media-group'>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/modeling/MainScene01.webp" title="Teahouse" alt="" />
+        <figcaption>Teahouse</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/modeling/MainScene02.webp" title="Chinese garden" alt="" />
+        <figcaption>Chinese garden</figcaption>
+    </figure>
+</div>
+</div>
+<h4 id="substance-workflow" tabindex="-1">substance workflow</h4>
+<ul>
+<li>Substance Designer work flow. Quickly create textures using only SmartMaterial.</li>
+</ul>
+<div class='media-group'>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/substance/Hardsurface.webp" title="Hard surface texture" alt="" />
+        <figcaption>Hard surface texture</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/substance/surfaceTexture.webp" title="surface Textures" alt="" />
+        <figcaption>Surface Textures</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/substance/vehicle.webp" title="vehicle" alt="" />
+        <figcaption>Vehicle</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/substance/vehicleTexture.webp" title="vehicleTexture" alt="" />
+        <figcaption>Vehicle Texture</figcaption>
+    </figure>
+</div>
+</div>
+<h4 id="photoscan-workflow" tabindex="-1">PhotoScan workflow</h4>
+<ul>
+<li>Create textures using PhotoScan workflow.</li>
+</ul>
+<div class='media-group'>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/substance/fiberTexture.webp" title="fiberTexture" alt="" />
+        <figcaption>PBR Fiber Photo-Scan</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/substance/FireHydrant.webp" title="PhotoScan" alt="" />
+        <figcaption>Fire Hydrant</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/substance/OnePiece.webp" title="OnePiece" alt="" />
+        <figcaption>OnePiece Garage kit</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/substance/Trunk01.webp" title="Trunk01" alt="" />
+        <figcaption>Tree Trunk</figcaption>
+    </figure>
+</div>
+</div>
+<h3 id="patent" tabindex="-1">patent</h3>
+<ul>
+<li>As main Inventor-shadow in SNS game : <a href="https://patents.google.com/patent/CN110517346B/zh?oq=CN110517346B">CN110517346B</a></li>
+</ul>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/house/cabinScene.webp" title="cabin building mode screen shoot" alt="" />
+        <figcaption>cabin Screen-shoot</figcaption>
+    </figure>
+</div>
+<h4 id="terrain-shadow-case" tabindex="-1">terrain shadow case</h4>
+<div class="media-container w400">
+    <figure>
+        <img class="zoomable" src="/assets/image/house/element.webp" title="building Render Texture" alt="" />
+        <figcaption>building shadow case</figcaption>
+    </figure>
+</div>
+<ol>
+<li>Set a camera as the light position, get a renderTexture</li>
+</ol>
+<div class="media-container w400">
+    <figure>
+        <img class="zoomable" src="/assets/image/house/buildingRT.webp" title="" alt="" />
+        <figcaption>Cabin Render Texture</figcaption>
+    </figure>
+</div>
+<ol start="2">
+<li>Shading and sampling RT<!-- <div class="media-container w400">
+ <figure>
+     <img class="zoomable" src="/assets/image/house/UnityMaterial.webp" title="Unity Material" alt="" />
+     <figcaption>cabin material</figcaption>
+ </figure>
+</li>
+</ol>
+</div> -->
+<pre class="language-hlsl"><code class="language-hlsl"><span class="token comment">// project RenderTexture in world position</span>
+v2f <span class="token function">vert</span><span class="token punctuation">(</span>appdata v<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    fixed4 tex <span class="token operator">=</span> <span class="token function">tex2D</span><span class="token punctuation">(</span>_MainTex<span class="token punctuation">,</span> i<span class="token punctuation">.</span>texcoord<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    fixed spec <span class="token operator">=</span> tex<span class="token punctuation">.</span>a<span class="token punctuation">;</span>
+
+    <span class="token keyword">float2</span> shadow_uv <span class="token operator">=</span> <span class="token function">mul</span><span class="token punctuation">(</span>_ShadowVPMatrix<span class="token punctuation">,</span> i<span class="token punctuation">.</span>worldPos<span class="token punctuation">)</span><span class="token punctuation">.</span>xy <span class="token operator">*</span> <span class="token number">0.5</span> <span class="token operator">+</span> <span class="token number">0.5</span><span class="token punctuation">;</span>
+    fixed atten <span class="token operator">=</span> <span class="token function">tex2D</span><span class="token punctuation">(</span>_CurrentShadowmap<span class="token punctuation">,</span> shadow_uv<span class="token punctuation">)</span><span class="token punctuation">.</span>r<span class="token punctuation">;</span>
+    fixed4 shadow_color <span class="token operator">=</span> <span class="token function">lerp</span><span class="token punctuation">(</span>_ShadowCol<span class="token punctuation">,</span> <span class="token function">fixed4</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> atten<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//blend shadow and texture</span>
+    tex <span class="token operator">=</span> _MainColor <span class="token operator">*</span> _DirectionalLightColor <span class="token operator">*</span> shadow_color <span class="token operator">*</span> tex<span class="token punctuation">;</span>
+
+    <span class="token keyword">half4</span> normalMap <span class="token operator">=</span> <span class="token function">tex2D</span><span class="token punctuation">(</span>_BumpMap<span class="token punctuation">,</span> i<span class="token punctuation">.</span>texcoord<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">half3</span> normalDir <span class="token operator">=</span> <span class="token function">normalize</span><span class="token punctuation">(</span><span class="token function">UnpackNormal</span><span class="token punctuation">(</span>normalMap<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">half3</span> viewDir <span class="token operator">=</span> <span class="token function">normalize</span><span class="token punctuation">(</span>i<span class="token punctuation">.</span>viewDir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">half3</span> lightDir <span class="token operator">=</span> <span class="token function">normalize</span><span class="token punctuation">(</span>i<span class="token punctuation">.</span>lightDir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">half3</span> h <span class="token operator">=</span> <span class="token function">normalize</span><span class="token punctuation">(</span>viewDir <span class="token operator">+</span> lightDir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">float</span> r <span class="token operator">=</span> <span class="token function">max</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token function">dot</span><span class="token punctuation">(</span>h<span class="token punctuation">,</span> normalDir<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    tex <span class="token operator">+=</span> _SpecularCol <span class="token operator">*</span> spec <span class="token operator">*</span> <span class="token function">pow</span><span class="token punctuation">(</span>r<span class="token punctuation">,</span> <span class="token number">48</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> tex<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<!-- 3. mapping of sampling on the terrain
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/house/图片47.webp" title="" alt="" />
+        <figcaption>cabin building mode</figcaption>
+    </figure>
+</div> -->
+<h4 id="element-shadow-case" tabindex="-1">element shadow case</h4>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/house/docorateBuild.webp" title="showcase" alt="" />
+        <figcaption>Cabin Building</figcaption>
+    </figure>
+</div>
+<ol>
+<li>Bake 4 directional shadow in solo channel</li>
+</ol>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/house/shadowDir.webp" title="shadow Direction" alt="" />
+        <figcaption>Directional Shadow</figcaption>
+    </figure>
+</div>
+<ol start="2">
+<li>Shading and sampling RGBA channel shadow, and then dye color to them<!-- <div class="media-container ">
+ <figure>
+     <img class="zoomable" src="/assets/image/house/decorateMaterial.webp" title="material" alt="" />
+     <figcaption>building material</figcaption>
+ </figure>
+</li>
+</ol>
+</div> -->
+<pre class="language-hlsl"><code class="language-hlsl">fixed4 <span class="token function">frag</span><span class="token punctuation">(</span>v2f i<span class="token punctuation">)</span> <span class="token operator">:</span> COLOR
+<span class="token punctuation">{</span>
+    fixed4 tex <span class="token operator">=</span> <span class="token function">tex2D</span><span class="token punctuation">(</span>_MainTex<span class="token punctuation">,</span> i<span class="token punctuation">.</span>texcoord<span class="token punctuation">.</span>xy<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//added shadow information</span>
+    fixed4 lm <span class="token operator">=</span> <span class="token function">tex2D</span><span class="token punctuation">(</span>_ShasowTex<span class="token punctuation">,</span> i<span class="token punctuation">.</span>texcoord<span class="token punctuation">.</span>zw<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    fixed shadowvalue <span class="token operator">=</span> <span class="token function">dot</span><span class="token punctuation">(</span>lm<span class="token punctuation">,</span> _ShadowDir<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    tex <span class="token operator">=</span> <span class="token function">lerp</span><span class="token punctuation">(</span>tex <span class="token operator">*</span> shadowvalue <span class="token operator">*</span> _ShadowCol<span class="token punctuation">,</span> tex<span class="token punctuation">,</span> shadowvalue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    tex <span class="token operator">=</span> <span class="token function">lerp</span><span class="token punctuation">(</span>tex<span class="token punctuation">,</span> tex <span class="token operator">*</span> _LightPower<span class="token punctuation">,</span> shadowvalue <span class="token operator">*</span> <span class="token number">1.8</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">ifdef</span> <span class="token expression">_GRADIENT_ON</span></span>
+        tex <span class="token operator">*=</span> i<span class="token punctuation">.</span>gradient<span class="token punctuation">;</span>
+    <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">endif</span></span>
+
+    <span class="token keyword">return</span> tex<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="elements-batch" tabindex="-1">elements batch</h4>
+<ul>
+<li>Generating UV3 to show shadow channel, and then to deal static batch.</li>
+</ul>
+<div class='media-group'>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/house/batchCase.webp" title="batchCase" alt="" />
+        <figcaption>Player Building</figcaption>
+    </figure>
+</div>
+<div class="media-container ">
+    <figure>
+        <img class="zoomable" src="/assets/image/house/staticBatch.webp" title="static batch" alt="" />
+        <figcaption>Running Batched</figcaption>
+    </figure>
+</div>
+</div>
+<h2 id="about-me" tabindex="-1">about me</h2>
+<h3 id="education" tabindex="-1">education</h3>
+<ul>
+<li>University of Pennsylvania, Philadelphia, USA, Sep 2023 - Oct 2025</li>
+<li>Computer and Information Technology - Computer Graphics and Game Technology.</li>
+</ul>
+<h3 id="skills" tabindex="-1">skills</h3>
+<ul>
+<li>Programming : C++, Shaderlab, Python, Java</li>
+<li>DCC Tools :   Unity, Unreal Engine5, Omniverse Audio2Face, Snapdragon, Wrap4D, Maya, Renderdoc</li>
+</ul>
+<h3 id="introduce" tabindex="-1">introduce</h3>
+<ul>
+<li>I am a seasoned game developer, have many years of technical art experience, focusing on Unity engine racing games and casual card games, while also managing the game rendering’s compatibility and performance optimization. I have also been responsible for the digital human production process in Unreal Engine5. I am keen on opportunities to participate in work related to VR or AR technologies. I aspire to apply the experience gained in the gaming industry to a broader range of fields, aiming to enhance work efficiency and the quality of CG.</li>
+</ul>
+<h2 id="contact" tabindex="-1">Contact</h2>
+<ul>
+<li>
+<p><a href="mailto:lobizhao@seas.upenn.edu">lobizhao@seas.upenn.edu</a></p>
+</li>
+<li>
+<p><a href="mailto:lobizhao@gmail.com">lobizhao@gmail.com</a></p>
+</li>
+</ul>
+</div>
+</div>
+</body>
+
+</html>

@@ -13,13 +13,20 @@ title: "Lobi's Page"
 
 <div id='content'>
 
-## Jiangman Zhao
+## Jiangman(Lobi) Zhao
 
-## project
+## Project
+### Tools Development
 
-### shading
+- C++ image processing tool with multithreading.
 
-#### Car painting commercialize
+- Python-based Qt tool for exporting cache files to Unreal Engine.
+
+- Python-based Qt hair plugin interface implementation
+
+### Unity Shading
+
+#### Car painting
 
 - Shading in Unity engine.
 {% render "image", src: 'car/MainScene', caption: 'Car Scene', title: 'car painting' %}
@@ -134,7 +141,7 @@ fixed4 frag(v2f i) : SV_Target
 {% render "image", src: 'grooming/DynamicBone', title: 'set Unity dynamic bone' %}
 </div>
 
-### grooming
+### Grooming
 
 - Create by maya tool that made by our TA team. Creating hair card maps base on XGen and modeling FurCard by self developed tool.
 {% render "image", src: 'grooming/longHairinMaya', caption: 'Create In Maya', title: 'hair crate in maya' %}
@@ -145,7 +152,7 @@ fixed4 frag(v2f i) : SV_Target
 - Animal fur test. Baking vertex color on FurCard mesh blend base color fo body model in unreal engine
 {% render "image", src: 'grooming/shortFurFox', caption: 'Short Fur', title: 'short fur for animal case' %}
 
-### modeling
+### Modeling
 
 #### chess Game Online
 
@@ -182,7 +189,7 @@ fixed4 frag(v2f i) : SV_Target
 {% render "image", src: 'substance/Trunk01', caption: 'Tree Trunk', title: 'Trunk01' %}
 </div>
 
-### patent
+### Patent
 
 - As main Inventor-shadow in SNS game : [CN110517346B](https://patents.google.com/patent/CN110517346B/zh?oq=CN110517346B)
 {% render "image", src: 'house/cabinScene', caption: 'cabin Screen-shoot', title: 'cabin building mode screen shoot' %}
@@ -263,14 +270,29 @@ fixed4 frag(v2f i) : COLOR
 </div>
 
 ## about me
+### Education 
 
-### introduce
+#### University of Pennsylvania
+- Philadelphia, USA, PA
 
-- Having wide-ranging knowledge and rich experience in applying different 2D and 3D tools and engines
-- Experienced in managing 3D assets, programming, and debugging
-- Having conducted game and GamePlay analysis from technical and commercial perspectives
-- Highly motivated and love to learn and apply new tools and programming languages to enhance efficiency
-- Cooperative, communicative, and able to collaborate with other teams, departments, and outsourcing partners
+- Computer Graphics and Game Technology Sep 2024 - Oct 2026
+
+- Computer and Information Technology   Sep 2023 - Jul 2024
+
+### Skills
+
+#### Programming Skills 
+
+-  C++, C, Assembly, Python, Java, OpenGL, GLSL
+
+#### Core Skills 
+
+- Developed and optimized mobile application, 
+
+#### DevTools: 
+
+- Snapdragon Profiler, Unity, Unreal Engine5, Qt creator, Maya, Substance Designer
+
 
 ## Contact
 

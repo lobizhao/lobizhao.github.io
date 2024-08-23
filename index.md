@@ -22,8 +22,11 @@ title: "Lobi's Page"
 
 - Python-based Qt tool for exporting cache files to Unreal Engine.
 
-- Python-based Qt hair plugin interface implementation
-
+- Python-based Qt hair plugin interface implementation.
+<div class='media-group'>
+{% render "image", src: 'tools/qtLayout', caption: 'Qt Python Layout', title: 'python Ui' %}
+{% render "image", src: 'tools/qtPyside', caption: 'Qt Python Layout', title: 'maya tool' %}
+</div>
 ### Unity Shading
 
 #### Car painting
@@ -185,7 +188,7 @@ fixed4 frag(v2f i) : SV_Target
 <div class='media-group'>
 {% render "image", src: 'substance/fiberTexture', caption: 'PBR Fiber Photo-Scan', title: 'fiberTexture' %}
 {% render "image", src: 'substance/FireHydrant', caption: 'Fire Hydrant', title: 'PhotoScan' %}
-{% render "image", src: 'substance/OnePiece', caption: 'OnePiece Garage kit', title: 'OnePiece' %}
+<!-- {% render "image", src: 'substance/OnePiece', caption: 'OnePiece Garage kit', title: 'OnePiece' %} -->
 {% render "image", src: 'substance/Trunk01', caption: 'Tree Trunk', title: 'Trunk01' %}
 </div>
 
@@ -196,10 +199,12 @@ fixed4 frag(v2f i) : SV_Target
 
 #### terrain shadow case
 
-{% render "image", src: 'house/element', caption: 'building shadow case', title: 'building Render Texture' class: 'w400' %}
-
 1. Set a camera as the light position, get a renderTexture
+
+<div class='media-group'>
+{% render "image", src: 'house/element', caption: 'building shadow case', title: 'building Render Texture' class: 'w400' %}
 {% render "image", src: 'house/buildingRT', caption: 'Cabin Render Texture', title: '' class: 'w400' %}
+</div>
 
 2. Shading and sampling RT
    <!-- {% render "image", src: 'house/UnityMaterial', caption: 'cabin material', title: 'Unity Material' class: 'w400' %} -->
@@ -272,8 +277,7 @@ fixed4 frag(v2f i) : COLOR
 ## about me
 ### Education 
 
-#### University of Pennsylvania
-- Philadelphia, USA, PA
+#### University of Pennsylvania. USA, PA
 
 - Computer Graphics and Game Technology Sep 2024 - Oct 2026
 
@@ -289,7 +293,7 @@ fixed4 frag(v2f i) : COLOR
 
 - Developed and optimized mobile application, 
 
-#### DevTools: 
+#### DevTools 
 
 - Snapdragon Profiler, Unity, Unreal Engine5, Qt creator, Maya, Substance Designer
 

@@ -13,20 +13,21 @@ title: "Lobi's Page"
 
 <div id='content'>
 
-## Jiangman(Lobi) Zhao
+## Jiangman (Lobi) Zhao
 
 ## Project
 ### Tools Development
 
-- C++ image processing tool with multithreading.
+- Developed a C++ image processing tool that supports multithreading for efficient performance.
 
-- Python-based Qt tool for exporting cache files to Unreal Engine.
+- Designed and implemented a Python-based Qt tool to export cache files into Unreal Engine, improving workflow efficiency.
 
-- Python-based Qt hair plugin interface implementation.
+- Implemented a Python-based Qt interface for a hair plugin, facilitating seamless integration and user interaction.
 <div class='media-group'>
 {% render "image", src: 'tools/qtLayout', caption: 'Qt Python Layout', title: 'python Ui' %}
 {% render "image", src: 'tools/qtPyside', caption: 'Qt Python Layout', title: 'maya tool' %}
 </div>
+
 ### Unity Shading
 
 #### Car painting
@@ -279,9 +280,9 @@ fixed4 frag(v2f i) : COLOR
 
 #### University of Pennsylvania. USA, PA
 
-- Computer Graphics and Game Technology Sep 2024 - Oct 2026
+- Computer Graphics and Game Technology       Sep 2024 - Oct 2026
 
-- Computer and Information Technology   Sep 2023 - Jul 2024
+- Computer and Information Technology         Sep 2023 - Jul 2024
 
 ### Skills
 
@@ -289,14 +290,13 @@ fixed4 frag(v2f i) : COLOR
 
 -  C++, C, Assembly, Python, Java, OpenGL, GLSL
 
-#### Core Skills 
-
-- Developed and optimized mobile application, 
-
 #### DevTools 
 
 - Snapdragon Profiler, Unity, Unreal Engine5, Qt creator, Maya, Substance Designer
 
+#### Core Skills 
+
+- Computer Graphic, Developed and optimized mobile application, Scripting, Shader-Programming
 
 ## Contact
 

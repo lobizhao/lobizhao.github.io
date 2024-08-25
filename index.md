@@ -19,6 +19,7 @@ title: "Lobi's Page"
 ### Tools Development
 
 - Developed a C++ image processing tool that supports multithreading for efficient performance.
+{% render "image", src: 'tools/blurtool', caption: 'c++ imageBlur', title: 'multi thread' %}
 
 - Designed and implemented a Python-based Qt tool to export cache files into Unreal Engine, improving workflow efficiency.
 

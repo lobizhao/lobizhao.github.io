@@ -1,0 +1,63 @@
+---
+layout: layout.liquid
+title: "CUDA Path Tracer | Jiangman Zhao"
+---
+
+<article class="project-page">
+  <a class="back-link" href="/#projects">Back to projects</a>
+
+  <header class="project-hero">
+    <p class="eyebrow">Offline Rendering</p>
+    <h1>CUDA Path Tracer</h1>
+    <p>
+      A GPU path tracing project for studying physically based light transport, Monte Carlo integration, material sampling, acceleration structures, and progressive rendering.
+    </p>
+    <div class="tag-row">
+      <span>CUDA</span>
+      <span>C++</span>
+      <span>Path Tracing</span>
+      <span>PBR</span>
+      <span>Monte Carlo</span>
+    </div>
+  </header>
+
+  <section class="project-section">
+    <h2>Overview</h2>
+    <p>
+      This page is the place to document the full CUDA renderer: final images, convergence comparisons, material models, camera model, sampling strategy, performance notes, and architecture diagrams.
+    </p>
+    <div class="placeholder-visual">
+      <span>CUDA Path Tracer Render Placeholder</span>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <h2>Technical Breakdown</h2>
+    </div>
+    <div class="detail-list">
+      <div>
+        <h3>Light transport</h3>
+        <p>Document direct and indirect illumination, bounce depth, Russian roulette termination, and throughput accumulation.</p>
+      </div>
+      <div>
+        <h3>Sampling</h3>
+        <p>Add notes about hemisphere sampling, importance sampling, random number generation, anti-aliasing, and progressive accumulation.</p>
+      </div>
+      <div>
+        <h3>GPU architecture</h3>
+        <p>Explain kernel organization, memory layout, scene data upload, and where CUDA parallelism improves render time.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="project-section">
+    <h2>Implementation Notes</h2>
+    <pre class="language-cpp"><code>// Example structure for this section.
+for each pixel in parallel:
+    generate camera ray
+    trace path through scene
+    sample BSDF and lights
+    accumulate radiance progressively</code></pre>
+  </section>
+</article>

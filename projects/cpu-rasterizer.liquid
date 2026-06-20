@@ -1,0 +1,53 @@
+---
+layout: layout.liquid
+title: "CPU Rasterizer | Jiangman Zhao"
+---
+
+<article class="project-page">
+  <a class="back-link" href="/#projects">Back to projects</a>
+
+  <header class="project-hero">
+    <p class="eyebrow">Software Rendering</p>
+    <h1>CPU Rasterizer</h1>
+    <p>
+      A software renderer built to understand the graphics pipeline from vertex transformation and clipping to triangle setup, barycentric interpolation, depth testing, and fragment shading.
+    </p>
+    <div class="tag-row">
+      <span>C++</span>
+      <span>Rasterization</span>
+      <span>Linear Algebra</span>
+      <span>Depth Buffer</span>
+      <span>Shading</span>
+    </div>
+  </header>
+
+  <section class="project-section">
+    <h2>Overview</h2>
+    <p>
+      Use this page to show pipeline diagrams, output images, comparison with GPU rendering, and explanations of each stage in the software rasterizer.
+    </p>
+    <div class="placeholder-visual">
+      <span>CPU Rasterizer Output Placeholder</span>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <h2>Pipeline</h2>
+    </div>
+    <div class="detail-list">
+      <div>
+        <h3>Vertex processing</h3>
+        <p>Model, view, projection transforms, homogeneous coordinates, perspective divide, and viewport mapping.</p>
+      </div>
+      <div>
+        <h3>Triangle rasterization</h3>
+        <p>Edge functions, bounding boxes, barycentric coordinates, perspective-correct interpolation, and coverage tests.</p>
+      </div>
+      <div>
+        <h3>Fragment stage</h3>
+        <p>Depth buffering, normal interpolation, texture sampling, lighting, and color output.</p>
+      </div>
+    </div>
+  </section>
+</article>

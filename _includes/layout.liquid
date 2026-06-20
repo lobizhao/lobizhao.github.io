@@ -8,11 +8,19 @@
   <link href="https://unpkg.com/prismjs@1.20.0/themes/prism-okaidia.css" rel="stylesheet" />
   <link href="/css/main.css" rel="stylesheet">
   <script src="/js/modal.js" defer></script>
-  <script src="/js/toc_observer.js" defer></script>
   <script src="/js/video_image_observer.js" defer></script>
 </head>
 
 <body>
+  <header class="site-header">
+    <a class="site-title" href="/">Jiangman Zhao</a>
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a href="/#projects">Projects</a>
+      <a href="/#skills">Skills</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </header>
 
   <div id="modal">
     <img id="modal-image">
@@ -22,7 +30,9 @@
     </video>
   </div>
 
-  {{ content }}
+  <main>
+    {{ content }}
+  </main>
 </body>
 
 </html>

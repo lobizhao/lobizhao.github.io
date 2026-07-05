@@ -1,53 +1,230 @@
 ---
 layout: layout.liquid
-title: "CPU Rasterizer | Jiangman Zhao"
+title: "GLSL Path Tracer | Jiangman Zhao"
 ---
 
 <article class="project-page">
   <a class="back-link" href="/#projects">Back to projects</a>
 
   <header class="project-hero">
-    <p class="eyebrow">Software Rendering</p>
-    <h1>CPU Rasterizer</h1>
+    <p class="eyebrow">GPU Path Tracing</p>
+    <h1>GLSL Path Tracer</h1>
     <p>
-      A software renderer built to understand the graphics pipeline from vertex transformation and clipping to triangle setup, barycentric interpolation, depth testing, and fragment shading.
+      A GPU-accelerated global illumination path tracer implemented entirely in GLSL fragment shaders using OpenGL 3.3 and Qt 6. Each pixel is a fragment shader invocation that traces rays through the scene and progressively accumulates light across frames.
     </p>
     <div class="tag-row">
-      <span>C++</span>
-      <span>Rasterization</span>
-      <span>Linear Algebra</span>
-      <span>Depth Buffer</span>
-      <span>Shading</span>
+      <span>GLSL 3.30</span>
+      <span>OpenGL 3.3</span>
+      <span>Qt 6</span>
+      <span>C++17</span>
+      <span>Global Illumination</span>
+      <span>MIS</span>
+    </div>
+    <div class="project-actions">
+      <a class="button primary" href="https://github.com/lobizhao/GLSL-PathTracer">View Code on GitHub</a>
     </div>
   </header>
 
   <section class="project-section">
     <h2>Overview</h2>
     <p>
-      Use this page to show pipeline diagrams, output images, comparison with GPU rendering, and explanations of each stage in the software rasterizer.
+      The renderer runs the full path tracing loop on the GPU. The CPU side uses Qt and C++ to load scene data, upload uniforms, manage OpenGL resources, and render a full-screen quad. The fragment shader performs ray-scene intersection, BSDF sampling, light sampling, multiple importance sampling, and frame accumulation.
     </p>
-    <div class="placeholder-visual">
-      <span>CPU Rasterizer Output Placeholder</span>
+    <div class="render-gallery">
+      <figure>
+        <img src="/assets/image/GLSL_PathTracer/cornellBoxFull.png" alt="GLSL path tracer Cornell box full global illumination render">
+        <figcaption>Cornell Box (Full)</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/image/GLSL_PathTracer/pointLightFull.png" alt="GLSL path tracer point light render">
+        <figcaption>Point Light</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/image/GLSL_PathTracer/spotLightFull.png" alt="GLSL path tracer spot light render">
+        <figcaption>Spot Light</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/image/GLSL_PathTracer/cornellBoxEnvMapNoLights.png" alt="GLSL path tracer Cornell box environment map no lights render">
+        <figcaption>No Lights (Env Map)</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/image/GLSL_PathTracer/mirrorBox.png" alt="GLSL path tracer mirror box render">
+        <figcaption>Mirror Box</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/image/GLSL_PathTracer/roughMirrorFull.png" alt="GLSL path tracer rough mirror render">
+        <figcaption>Rough Mirror</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/image/GLSL_PathTracer/mirrorBoxEnvMap.png" alt="GLSL path tracer mirror environment map render">
+        <figcaption>Mirror Reflection</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/image/GLSL_PathTracer/cornellBoxEnvMap.png" alt="GLSL path tracer Cornell box environment map render">
+        <figcaption>Environment Map</figcaption>
+      </figure>
+      <figure>
+        <img src="/assets/image/GLSL_PathTracer/roughMirrorEnv.png" alt="GLSL path tracer rough mirror environment render">
+        <figcaption>Rough Mirror (Env)</figcaption>
+      </figure>
     </div>
   </section>
 
   <section class="project-section two-column">
     <div>
-      <h2>Pipeline</h2>
+      <p class="eyebrow">Architecture</p>
+      <h2>CPU Host and GPU Shader Pipeline</h2>
+    </div>
+    <div>
+      <p>
+        The project separates host orchestration from shader-side rendering. C++ and Qt upload scene state and drive the render loop; GLSL modules implement the actual path tracing logic.
+      </p>
+      <pre class="language-text"><code>CPU (Qt / C++)                 GPU (GLSL Fragment Shader)
+----------------              ---------------------------------------
+Upload uniforms           ->   pathtracer.defines.glsl        structs, math, RNG
+Upload scene data         ->   pathtracer.intersection.glsl   ray-scene intersection
+Render full-screen quad   ->   pathtracer.bsdf.glsl           material / BSDF eval
+Accumulate frames         ->   pathtracer.sampleWarping.glsl  sampling functions
+                               pathtracer.light.glsl          lights and MIS
+                               pathtracer.frag.glsl           Li_Naive / Li_Full</code></pre>
+      <p>
+        Progressive rendering blends the current sample with the accumulated result over time.
+      </p>
+      <pre class="language-glsl"><code>accumulated = mix(lastFrame, currentSample, 1.0 / float(iteration));</code></pre>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Features</p>
+      <h2>Integrators and Lighting</h2>
     </div>
     <div class="detail-list">
       <div>
-        <h3>Vertex processing</h3>
-        <p>Model, view, projection transforms, homogeneous coordinates, perspective divide, and viewport mapping.</p>
+        <h3>Li_Naive</h3>
+        <p>
+          Iterative path tracing that accumulates emitted radiance when a path directly hits a light. This baseline integrator does not perform direct light sampling.
+        </p>
       </div>
       <div>
-        <h3>Triangle rasterization</h3>
-        <p>Edge functions, bounding boxes, barycentric coordinates, perspective-correct interpolation, and coverage tests.</p>
+        <h3>Li_Full</h3>
+        <p>
+          Full path tracing integrator with direct lighting and global illumination at every bounce.
+        </p>
       </div>
       <div>
-        <h3>Fragment stage</h3>
-        <p>Depth buffering, normal interpolation, texture sampling, lighting, and color output.</p>
+        <h3>Supported Light Sources</h3>
+        <p>
+          Rectangle area lights, sphere area lights, point lights, spot lights, and HDR environment lighting. Area lights use explicit sampling; point and spot lights are evaluated directly; environment lighting uses hemisphere sampling.
+        </p>
       </div>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Sampling</p>
+      <h2>Multiple Importance Sampling</h2>
+    </div>
+    <div>
+      <p>
+        <code>ComputeDirectLight_MIS</code> combines light-source sampling and BSDF sampling using the power heuristic. Area lights use full MIS, point and spot lights use light sampling only, and specular surfaces skip MIS to avoid double-counting direct emission.
+      </p>
+      <pre class="language-glsl"><code>float PowerHeuristic(float nf, float fPdf, float ng, float gPdf)
+{
+    float f = nf * fPdf;
+    float g = ng * gPdf;
+    return (f * f) / (f * f + g * g);
+}</code></pre>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Materials</p>
+      <h2>BSDF Material System</h2>
+    </div>
+    <div class="detail-list">
+      <div>
+        <h3>Diffuse</h3>
+        <p>Lambertian evaluation with cosine-weighted hemisphere sampling.</p>
+      </div>
+      <div>
+        <h3>Specular Reflection</h3>
+        <p>Perfect mirror reflection using <code>reflect(wo)</code>.</p>
+      </div>
+      <div>
+        <h3>Specular Transmission and Glass</h3>
+        <p>Snell's law refraction with Fresnel reflection/transmission blending for dielectric glass.</p>
+      </div>
+      <div>
+        <h3>Microfacet GGX</h3>
+        <p>Trowbridge-Reitz normal distribution with Smith shadowing-masking for rough mirror materials.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Geometry</p>
+      <h2>Ray-Scene Intersection</h2>
+    </div>
+    <div>
+      <p>
+        The renderer supports multiple primitive types, all transformed through inverse transform matrices so rays can be evaluated in object space.
+      </p>
+      <div class="detail-list">
+        <div>
+          <h3>Analytic Primitives</h3>
+          <p>Rectangle, box with slab intersection, and sphere with quadratic analytic intersection.</p>
+        </div>
+        <div>
+          <h3>Triangle Meshes</h3>
+          <p>Moller-Trumbore triangle intersection with mesh data packed into <code>sampler2D</code> textures for shader access.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Texture Support</p>
+      <h2>Material Maps</h2>
+    </div>
+    <div class="detail-list">
+      <div>
+        <h3>Albedo Maps</h3>
+        <p>Gamma-corrected color textures for surface base color.</p>
+      </div>
+      <div>
+        <h3>Normal Maps</h3>
+        <p>Tangent-space normal maps transformed through TBN for local detail.</p>
+      </div>
+      <div>
+        <h3>Roughness Maps</h3>
+        <p>Texture-driven roughness for microfacet material variation.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Tech Stack</p>
+      <h2>Implementation Details</h2>
+    </div>
+    <div>
+      <pre class="language-text"><code>glsl/
+  pathtracer.defines.glsl       constants, structs, math helpers, RNG
+  pathtracer.sampleWarping.glsl disk / hemisphere / sphere sampling
+  pathtracer.intersection.glsl  primitive intersection
+  pathtracer.bsdf.glsl          f(), Sample_f(), Pdf()
+  pathtracer.light.glsl         Sample_Li(), Pdf_Li(), MIS
+  pathtracer.frag.glsl          Li_Naive, Li_Full, main()
+src/
+  scene/                        scene loading, geometry, lights, materials
+  mygl.cpp                      OpenGL setup, render loop, framebuffer ping-pong
+jsons/                          scene description files
+images/                         render outputs</code></pre>
     </div>
   </section>
 </article>

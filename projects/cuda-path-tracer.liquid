@@ -10,54 +10,233 @@ title: "CUDA Path Tracer | Jiangman Zhao"
     <p class="eyebrow">Offline Rendering</p>
     <h1>CUDA Path Tracer</h1>
     <p>
-      A GPU path tracing project for studying physically based light transport, Monte Carlo integration, material sampling, acceleration structures, and progressive rendering.
+      A GPU path tracer implemented in CUDA for physically based rendering, BSDF material sampling, refraction, depth of field, OBJ mesh loading, HDR environment lighting, BVH acceleration, stream compaction, and stochastic sampling.
     </p>
     <div class="tag-row">
       <span>CUDA</span>
       <span>C++</span>
       <span>Path Tracing</span>
-      <span>PBR</span>
+      <span>BSDF</span>
+      <span>BVH</span>
       <span>Monte Carlo</span>
+    </div>
+    <div class="project-actions">
+      <a class="button primary" href="https://github.com/lobizhao/CUDA-Path-Tracer">View Code on GitHub</a>
     </div>
   </header>
 
   <section class="project-section">
     <h2>Overview</h2>
     <p>
-      This page is the place to document the full CUDA renderer: final images, convergence comparisons, material models, camera model, sampling strategy, performance notes, and architecture diagrams.
+      This project explores a CUDA rendering pipeline from ray generation to material scattering and progressive accumulation. The renderer supports multiple material types through a unified BSDF shading kernel, physically based transparent materials, camera effects, triangle meshes, environment maps, and GPU-oriented acceleration techniques.
     </p>
-    <div class="placeholder-visual">
-      <span>CUDA Path Tracer Render Placeholder</span>
+    <figure class="project-result">
+      <img src="/assets/image/CUDA_PathTracer/Head.png" alt="CUDA path tracer rendered head result">
+      <figcaption>Rendered head result from the CUDA path tracer.</figcaption>
+    </figure>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Part 1</p>
+      <h2>Core Rendering Features</h2>
+    </div>
+    <div class="detail-list">
+      <div>
+        <h3>Unified BSDF Shading</h3>
+        <p>
+          Implemented a material shading kernel that evaluates BSDF behavior and scatters rays for multiple material types inside the same rendering pipeline.
+        </p>
+        <figure class="inline-result">
+          <img src="/assets/image/CUDA_PathTracer/basicBsdf.png" alt="Basic BSDF rendering result">
+          <figcaption>Basic BSDF material result rendered with the CUDA path tracer.</figcaption>
+        </figure>
+        <pre class="language-cpp"><code>__global__ void shadeMaterial_with_BSDF()
+...
+__host__ __device__ void scatterRay()</code></pre>
+      </div>
+      <div>
+        <h3>Material Sorting</h3>
+        <p>
+          Grouped rays by material ID before shading to improve memory contiguity and reduce GPU warp divergence. The optimization is controlled by <code>SORT_MATERIAL</code> for performance comparison.
+        </p>
+        <pre class="language-cpp"><code>// Group paths by material ID before shading.
+thrust::stable_sort_by_key(materialIds, materialIds + num_paths, paths);</code></pre>
+      </div>
+      <div>
+        <h3>Stochastic Antialiasing</h3>
+        <p>
+          Added sub-pixel jitter during ray generation. Random offsets in the [0, 1) range smooth jagged edges through Monte Carlo convergence.
+        </p>
+        <div class="comparison-grid">
+          <figure>
+            <img src="/assets/image/CUDA_PathTracer/withoutAA.png" alt="CUDA path tracer render without antialiasing">
+            <figcaption>Without antialiasing</figcaption>
+          </figure>
+          <figure>
+            <img src="/assets/image/CUDA_PathTracer/withAA.png" alt="CUDA path tracer render with stochastic antialiasing">
+            <figcaption>With stochastic antialiasing</figcaption>
+          </figure>
+        </div>
+        <pre class="language-cpp"><code>#define ANTI_ALIASING 1
+
+float2 pixelOffset = make_float2(u01(rng), u01(rng));</code></pre>
+      </div>
     </div>
   </section>
 
   <section class="project-section two-column">
     <div>
-      <h2>Technical Breakdown</h2>
+      <p class="eyebrow">Part 2</p>
+      <h2>Materials, Camera, and Scene Loading</h2>
     </div>
     <div class="detail-list">
       <div>
-        <h3>Light transport</h3>
-        <p>Document direct and indirect illumination, bounce depth, Russian roulette termination, and throughput accumulation.</p>
+        <h3>Physically Based Refraction</h3>
+        <p>
+          Implemented transparent material support for glass-like surfaces, including entry/exit detection, Schlick Fresnel approximation, total internal reflection handling, and JSON material configuration.
+        </p>
+        <figure class="inline-result">
+          <img src="/assets/image/CUDA_PathTracer/Refraction.png" alt="CUDA path tracer refraction render">
+          <figcaption>Refractive material result with glass-like light transport.</figcaption>
+        </figure>
+        <pre class="language-cpp"><code>bool entering = cosTheta > 0;
+float fresnel = schlickFresnel(cosTheta, eta);
+if (glm::length(refracted) < 0.001f) {
+    // total internal reflection
+}</code></pre>
       </div>
       <div>
-        <h3>Sampling</h3>
-        <p>Add notes about hemisphere sampling, importance sampling, random number generation, anti-aliasing, and progressive accumulation.</p>
+        <h3>Depth of Field Camera</h3>
+        <p>
+          Simulated a real camera lens with configurable aperture radius and focal distance. Rays are sampled across a circular lens aperture to create natural defocus and bokeh through progressive sampling.
+        </p>
+        <div class="comparison-grid">
+          <figure>
+            <img src="/assets/image/CUDA_PathTracer/Depth01.png" alt="CUDA path tracer depth of field render example one">
+            <figcaption>Depth of field render example 1</figcaption>
+          </figure>
+          <figure>
+            <img src="/assets/image/CUDA_PathTracer/Depth02.png" alt="CUDA path tracer depth of field render example two">
+            <figcaption>Depth of field render example 2</figcaption>
+          </figure>
+        </div>
+        <pre class="language-cpp"><code>#if DEPTH_OF_FIELD
+glm::vec3 focalPoint = cam.position + cam.focalDistance * rayDir;
+
+float theta = u01(rng) * 2.0f * 3.14159265f;
+float r = cam.lensRadius * sqrt(u01(rng));
+glm::vec3 lensOffset = r * (cos(theta) * cam.right + sin(theta) * cam.up);
+
+segment.ray.origin = cam.position + lensOffset;
+segment.ray.direction = glm::normalize(focalPoint - segment.ray.origin);
+#endif</code></pre>
       </div>
       <div>
-        <h3>GPU architecture</h3>
-        <p>Explain kernel organization, memory layout, scene data upload, and where CUDA parallelism improves render time.</p>
+        <h3>OBJ Mesh Loading</h3>
+        <p>
+          Built a lightweight OBJ loader for vertices, normals, and faces using the <code>v//vn</code> format. Mesh data is transformed into world space, assigned material IDs, and integrated into the renderer's triangle array.
+        </p>
+      </div>
+      <div>
+        <h3>HDR Environment Map</h3>
+        <p>
+          Loaded HDR environment maps into CUDA texture objects for hardware-accelerated sampling with linear filtering and wrap addressing. The renderer supports JSON-driven environment configuration.
+        </p>
+        <figure class="inline-result">
+          <img src="/assets/image/CUDA_PathTracer/Environment%20Map.png" alt="CUDA path tracer environment map render">
+          <figcaption>HDR environment lighting result using an environment map.</figcaption>
+        </figure>
+        <pre class="language-cpp"><code>envMap.loadToCPU(fullenvpath);
+envmapHandle = scene->envMap.loadToCuda();</code></pre>
       </div>
     </div>
   </section>
 
-  <section class="project-section">
-    <h2>Implementation Notes</h2>
-    <pre class="language-cpp"><code>// Example structure for this section.
-for each pixel in parallel:
-    generate camera ray
-    trace path through scene
-    sample BSDF and lights
-    accumulate radiance progressively</code></pre>
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Acceleration</p>
+      <h2>BVH and GPU Traversal</h2>
+    </div>
+    <div>
+      <p>
+        The renderer uses a BVH acceleration structure to handle complex meshes such as Suzanne and larger character models. The BVH is built with Surface Area Heuristic partitioning and stored in a linear GPU-friendly memory layout for iterative traversal.
+      </p>
+      <div class="stat-grid">
+        <div>
+          <strong>16,689</strong>
+          <span>Suzanne triangles</span>
+        </div>
+        <div>
+          <strong>73,184</strong>
+          <span>Manny mesh triangles</span>
+        </div>
+        <div>
+          <strong>12</strong>
+          <span>SAH buckets</span>
+        </div>
+      </div>
+      <pre class="language-cpp"><code>BVHAccel::BVHAccel(std::vector&lt;std::shared_ptr&lt;Primitive&gt;&gt;&amp; prims,
+                   int maxPrimsInNode)
+...
+BVHBuildNode* BVHAccel::recursiveBuild(...)
+...
+__global__ void computeIntersectionsBVH(
+    int depth,
+    int num_paths,
+    PathSegment* pathSegments,
+    Geom* geoms,
+    Triangle* triangles,
+    LinearBVHNode* bvhNodes,
+    ShadeableIntersection* intersections)</code></pre>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Performance</p>
+      <h2>Optimization Notes</h2>
+    </div>
+    <div class="detail-list">
+      <div>
+        <h3>Stream Compaction</h3>
+        <p>
+          Used path termination detection and <code>thrust::stable_partition</code> to move active paths to the front of the array, reducing wasted work on terminated paths.
+        </p>
+        <pre class="language-cpp"><code>#if COMPACTION
+if (depth % 2 == 1 || depth == traceDepth - 1) {
+    auto lastPath = dev_paths + num_paths;
+    auto mid = thrust::stable_partition(thrust::device,
+                                        dev_paths,
+                                        lastPath,
+                                        IsAlive{});
+    num_paths = mid - dev_paths;
+}
+#endif</code></pre>
+      </div>
+      <div>
+        <h3>Improved Random Number Generation</h3>
+        <p>
+          Added a <code>BETTER_RANDOM</code> mode using an optimized 32-bit hash seed to reduce collisions and improve distribution quality for ray generation, material sampling, antialiasing, and depth of field.
+        </p>
+        <pre class="language-cpp"><code>#define BETTER_RANDOM 1
+
+uint32_t seed = index + (iter &lt;&lt; 16) + (depth &lt;&lt; 8);
+return thrust::default_random_engine(fastHash(seed));</code></pre>
+      </div>
+      <div>
+        <h3>Russian Roulette Termination</h3>
+        <p>
+          Implemented probabilistic termination for low-contribution paths. Surviving rays are reweighted to preserve an unbiased estimator while reducing unnecessary bounces.
+        </p>
+        <pre class="language-cpp"><code>// Applied near the end of a path.
+float survivalProbability = 0.8f;
+if (u01(rng) &gt; survivalProbability) {
+    remainingBounces = 0;
+} else {
+    throughput /= survivalProbability;
+}</code></pre>
+      </div>
+    </div>
   </section>
 </article>

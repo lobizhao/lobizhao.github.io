@@ -1,0 +1,140 @@
+---
+layout: layout.liquid
+title: "Terrain Shadow Optimization | Jiangman Zhao"
+---
+
+<article class="project-page">
+  <a class="back-link" href="/#projects">Back to projects</a>
+
+  <header class="project-hero">
+    <p class="eyebrow">Rendering Optimization</p>
+    <h1>Terrain Shadow Optimization</h1>
+    <p>
+      A real-time shadow optimization scheme for an SNS community game. The approach uses light-space render textures, baked directional shadow channels, shader-side sampling, and batching-friendly UV data to reduce dynamic shadow cost while preserving readable building shadows.
+    </p>
+    <div class="tag-row">
+      <span>Unity</span>
+      <span>Shader</span>
+      <span>RenderTexture</span>
+      <span>Realtime Shadow</span>
+      <span>Patent</span>
+    </div>
+    <div class="project-actions">
+      <a class="button primary" href="https://patents.google.com/patent/CN110517346B/zh?oq=CN110517346B">View Patent</a>
+    </div>
+  </header>
+
+  <section class="project-section">
+    <h2>Overview</h2>
+    <p>
+      The system was designed for an SNS community scene where buildings, decorative elements, and terrain need convincing shadows without the full runtime cost of general dynamic shadows. The solution separates terrain projection shadows, element directional shadows, and batching data so the scene can remain efficient at runtime.
+    </p>
+    <figure class="project-result">
+      <img src="/assets/image/house/cabinScene.webp" alt="Cabin scene using terrain shadow optimization">
+      <figcaption>Cabin scene using the optimized terrain shadow solution.</figcaption>
+    </figure>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Case 1</p>
+      <h2>Terrain Shadow RenderTexture</h2>
+    </div>
+    <div>
+      <p>
+        A camera is placed at the light position to render a shadow texture from light space. The terrain shader projects this render texture into world space and blends the sampled shadow with the base terrain lighting.
+      </p>
+      <div class="comparison-grid">
+        <figure>
+          <img src="/assets/image/house/element.webp" alt="Building shadow case">
+          <figcaption>Building shadow case.</figcaption>
+        </figure>
+        <figure>
+          <img src="/assets/image/house/buildingRT.webp" alt="Cabin render texture shadow map">
+          <figcaption>Cabin RenderTexture used for projected shadow sampling.</figcaption>
+        </figure>
+      </div>
+      <pre class="language-hlsl"><code>// Project RenderTexture in world position.
+fixed4 frag(v2f i) : COLOR
+{
+    fixed4 tex = tex2D(_MainTex, i.texcoord);
+    fixed spec = tex.a;
+
+    float2 shadowUV = mul(_ShadowVPMatrix, i.worldPos).xy * 0.5 + 0.5;
+    fixed atten = tex2D(_CurrentShadowmap, shadowUV).r;
+    fixed4 shadowColor = lerp(_ShadowCol, fixed4(1, 1, 1, 1), atten);
+
+    tex = _MainColor * _DirectionalLightColor * shadowColor * tex;
+
+    half3 normalDir = normalize(UnpackNormal(tex2D(_BumpMap, i.texcoord)));
+    half3 viewDir = normalize(i.viewDir);
+    half3 lightDir = normalize(i.lightDir);
+    half3 halfDir = normalize(viewDir + lightDir);
+
+    float specular = max(0, dot(halfDir, normalDir));
+    tex += _SpecularCol * spec * pow(specular, 48);
+    return tex;
+}</code></pre>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Case 2</p>
+      <h2>Element Shadow Channels</h2>
+    </div>
+    <div>
+      <p>
+        For decorative elements, four directional shadows are baked into separate texture channels. At runtime, the shader samples the RGBA shadow texture and combines it with a direction selector to shade the element efficiently.
+      </p>
+      <div class="stacked-media">
+        <figure>
+          <img src="/assets/image/house/docorateBuild.webp" alt="Cabin building element shadow case">
+          <figcaption>Cabin building element shadow case.</figcaption>
+        </figure>
+        <figure>
+          <img src="/assets/image/house/shadowDir.webp" alt="Four directional shadow channels">
+          <figcaption>Four directional shadows baked into channels.</figcaption>
+        </figure>
+      </div>
+      <pre class="language-hlsl"><code>fixed4 frag(v2f i) : COLOR
+{
+    fixed4 tex = tex2D(_MainTex, i.texcoord.xy);
+    fixed4 lm = tex2D(_ShadowTex, i.texcoord.zw);
+
+    fixed shadowValue = dot(lm, _ShadowDir);
+
+    tex = lerp(tex * shadowValue * _ShadowCol, tex, shadowValue);
+    tex = lerp(tex, tex * _LightPower, shadowValue * 1.8);
+
+    #ifdef _GRADIENT_ON
+        tex *= i.gradient;
+    #endif
+
+    return tex;
+}</code></pre>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Batching</p>
+      <h2>UV3 Shadow Data and Static Batch</h2>
+    </div>
+    <div>
+      <p>
+        To keep scene rendering batching-friendly, extra UV data is generated in UV3 to carry shadow channel information. This allows decorative elements to participate in static batching while still sampling the correct shadow data in the shader.
+      </p>
+      <div class="comparison-grid">
+        <figure>
+          <img src="/assets/image/house/batchCase.webp" alt="Player building batch case">
+          <figcaption>Player building shadow batch case.</figcaption>
+        </figure>
+        <figure>
+          <img src="/assets/image/house/staticBatch.webp" alt="Static batched building shadow case">
+          <figcaption>Running with static batching.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+</article>

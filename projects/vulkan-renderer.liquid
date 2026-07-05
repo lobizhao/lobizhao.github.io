@@ -1,6 +1,6 @@
 ---
 layout: layout.liquid
-title: "Vulkan Renderer | Jiangman Zhao"
+title: "Vulkan Grass Rendering | Jiangman Zhao"
 ---
 
 <article class="project-page">
@@ -8,46 +8,210 @@ title: "Vulkan Renderer | Jiangman Zhao"
 
   <header class="project-hero">
     <p class="eyebrow">Graphics API</p>
-    <h1>Vulkan Renderer</h1>
+    <h1>Vulkan Grass Rendering</h1>
     <p>
-      Vulkan rendering experiments focused on explicit GPU resource management, swapchain setup, command buffers, render passes, synchronization, and shader-driven drawing.
+      A real-time Vulkan grass renderer focused on procedural blade representation, dynamic force simulation, GPU-friendly culling, blade-count performance analysis, and tessellation-based level of detail.
     </p>
     <div class="tag-row">
       <span>Vulkan</span>
       <span>C++</span>
-      <span>SPIR-V</span>
-      <span>Swapchain</span>
-      <span>GPU Resources</span>
+      <span>Tessellation</span>
+      <span>LOD</span>
+      <span>Culling</span>
+      <span>Realtime Simulation</span>
+    </div>
+    <div class="project-actions">
+      <a class="button primary" href="https://github.com/lobizhao/Vulkan_Rendering">View Code on GitHub</a>
     </div>
   </header>
 
   <section class="project-section">
     <h2>Overview</h2>
     <p>
-      This page can become the technical case study for your Vulkan renderer: renderer architecture, frame loop, descriptor sets, pipeline creation, synchronization strategy, and screenshots.
+      This project renders a dense animated grass field in Vulkan. Each blade is modeled procedurally, simulated with physical and procedural forces, and optimized through multiple culling strategies to preserve real-time performance across large blade counts.
     </p>
-    <div class="placeholder-visual">
-      <span>Vulkan Renderer Screenshot Placeholder</span>
+    <figure class="project-result">
+      <img src="/assets/image/Vulkan/headImg.gif" alt="Vulkan grass rendering animated result">
+      <figcaption>Realtime Vulkan grass rendering result with animated blade motion.</figcaption>
+    </figure>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Feature 1</p>
+      <h2>Grass Blade Representation</h2>
+    </div>
+    <div class="detail-list">
+      <div>
+        <h3>Bezier Curve Model</h3>
+        <p>
+          Each grass blade is represented as a quadratic Bezier curve with three control points: <code>v0</code>, <code>v1</code>, and <code>v2</code>. This gives every blade a compact procedural shape that can bend naturally.
+        </p>
+      </div>
+      <div>
+        <h3>Physical Properties</h3>
+        <p>
+          Each blade stores height, width, orientation, and a stiffness coefficient. These parameters control the blade's profile and how strongly it reacts to external forces.
+        </p>
+      </div>
+      <div>
+        <h3>Dynamic Simulation</h3>
+        <p>
+          Blades respond to gravity, recovery forces, and procedural wind in real time, creating field-scale motion without hand-authored animation.
+        </p>
+      </div>
     </div>
   </section>
 
   <section class="project-section two-column">
     <div>
-      <h2>Renderer Structure</h2>
+      <p class="eyebrow">Feature 2</p>
+      <h2>Forces Simulation</h2>
     </div>
     <div class="detail-list">
       <div>
-        <h3>Frame lifecycle</h3>
-        <p>Acquire image, record command buffer, submit work, synchronize fences/semaphores, and present to the swapchain.</p>
+        <h3>Gravity Force</h3>
+        <p>
+          The simulation combines environmental downward gravity with front gravity based on blade orientation. Together, these forces create a natural drooping effect.
+        </p>
       </div>
       <div>
-        <h3>Resource ownership</h3>
-        <p>Explain buffers, images, memory allocation, descriptor sets, and how resources are updated per frame.</p>
+        <h3>Recovery Force</h3>
+        <p>
+          Recovery force restores the blade toward its original upright position using the stiffness coefficient. Higher stiffness values recover faster and create more rigid grass.
+        </p>
       </div>
       <div>
-        <h3>Pipeline setup</h3>
-        <p>Document shader modules, render pass configuration, graphics pipeline state, and draw submission.</p>
+        <h3>Wind Force</h3>
+        <p>
+          Wind is generated from a multi-octave noise field with spatial variation and temporal animation. Blades bend more strongly when wind direction aligns with their orientation, and the effect is weighted so tips move more than roots.
+        </p>
+        <figure class="inline-result">
+          <img src="/assets/image/Vulkan/windForce.webp" alt="Vulkan grass procedural wind force animation">
+          <figcaption>Procedural wind force field driving grass blade motion.</figcaption>
+        </figure>
       </div>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Feature 3</p>
+      <h2>Culling Optimizations</h2>
+    </div>
+    <div>
+      <p>
+        The renderer implements three culling strategies to reduce unnecessary blade rendering: orientation culling, view-frustum culling, and distance-based culling with LOD.
+      </p>
+      <div class="stat-grid">
+        <div>
+          <strong>2^15</strong>
+          <span>baseline blade count</span>
+        </div>
+        <div>
+          <strong>30</strong>
+          <span>max distance units</span>
+        </div>
+        <div>
+          <strong>10</strong>
+          <span>distance buckets</span>
+        </div>
+      </div>
+      <div class="detail-list">
+        <div>
+          <h3>Orientation Culling</h3>
+          <p>
+            Culls blades nearly parallel to the view direction because they appear as thin lines from the camera perspective.
+          </p>
+          <pre class="language-cpp"><code>dot(bladeDirection, viewDirection) &gt; 0.9</code></pre>
+        </div>
+        <div>
+          <h3>View-Frustum Culling</h3>
+          <p>
+            Tests the root, tip, and midpoint of each blade against the camera frustum and only renders blades visible on screen.
+          </p>
+        </div>
+        <div>
+          <h3>Distance Culling with LOD</h3>
+          <p>
+            Culls blades beyond the maximum distance and progressively reduces density for farther blades using bucketed distance ranges.
+          </p>
+        </div>
+      </div>
+      <figure class="project-result compact-result">
+        <img src="/assets/image/Vulkan/Culling%20Type.png" alt="Vulkan grass culling type performance comparison">
+        <figcaption>Culling type comparison at 1080 x 768 with 2^15 grass blades.</figcaption>
+      </figure>
+      <div class="comparison-grid">
+        <figure>
+          <img src="/assets/image/Vulkan/Distance_Culling.webp" alt="Vulkan grass distance culling visualization">
+          <figcaption>Distance culling with density reduction.</figcaption>
+        </figure>
+        <figure>
+          <img src="/assets/image/Vulkan/View_frustum.webp" alt="Vulkan grass view frustum culling visualization">
+          <figcaption>View-frustum culling for visible grass blades.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Performance</p>
+      <h2>Blade Count Analysis</h2>
+    </div>
+    <div>
+      <p>
+        Performance was measured at a 1080 x 768 window size. The system maintains excellent performance above 1000 FPS up to 32,768 blades, drops to roughly 540 FPS at 131K blades, and remains practical on an RTX 3080 up to approximately 500K blades for playable real-time rendering.
+      </p>
+      <figure class="project-result compact-result">
+        <img src="/assets/image/Vulkan/NUM_BLADES%20base%20Run%20FPS.png" alt="Vulkan grass FPS versus number of grass blades chart">
+        <figcaption>FPS versus number of grass blades at 1080 x 768.</figcaption>
+      </figure>
+      <div class="detail-list">
+        <div>
+          <h3>Observed Trend</h3>
+          <p>
+            Performance degrades approximately linearly with blade count in log scale. Beyond one million blades, the workload becomes impractical for real-time applications.
+          </p>
+        </div>
+        <div>
+          <h3>Practical Range</h3>
+          <p>
+            The renderer can handle roughly 500K blades while maintaining playable framerates above 60 FPS on an RTX 3080.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Extra Credit</p>
+      <h2>Tessellation-Based LOD</h2>
+    </div>
+    <div>
+      <p>
+        The renderer adjusts tessellation level dynamically based on distance to the camera. Nearby grass receives more segments for smooth silhouettes, while distant grass uses fewer vertices to reduce rendering cost.
+      </p>
+      <div class="stat-grid">
+        <div>
+          <strong>5 x 7</strong>
+          <span>near tessellation segments</span>
+        </div>
+        <div>
+          <strong>1 x 3</strong>
+          <span>far tessellation segments</span>
+        </div>
+        <div>
+          <strong>LOD</strong>
+          <span>linear distance interpolation</span>
+        </div>
+      </div>
+      <figure class="project-result">
+        <img src="/assets/image/Vulkan/Lod.webp" alt="Vulkan grass tessellation based LOD animation">
+        <figcaption>Tessellation-based LOD adjusts blade complexity by camera distance.</figcaption>
+      </figure>
     </div>
   </section>
 </article>

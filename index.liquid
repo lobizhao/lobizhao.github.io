@@ -37,15 +37,15 @@ title: "Jiangman Zhao | Computer Graphics Developer"
       </li>
       <li>
         <span class="profile-icon" aria-hidden="true">In</span>
-        <a href="https://www.linkedin.com/in/YOUR_LINKEDIN_USERNAME">LinkedIn</a>
+        <a href="https://www.linkedin.com/in/lobizhao/">LinkedIn</a>
       </li>
     </ul>
   </aside>
 
   <div class="content-panel">
     <section class="hero" id="home">
-      <p class="eyebrow">Rendering, simulation, and graphics engineering</p>
-      <h2>Developer portfolio focused on real-time graphics and rendering systems.</h2>
+      <p class="eyebrow">Real-time rendering, performance optimization, and graphics engineering</p>
+      <h2>Developer portfolio focused on real-time graphics and performance optimization.</h2>
       <p>
         I work at the intersection of low-level graphics programming and production art pipelines: mobile GLSL shaders, Vulkan rendering experiments, CUDA path tracing, CPU rasterization, Unity shading, Unreal grooming, and workflow tools for technical artists.
       </p>
@@ -67,130 +67,125 @@ title: "Jiangman Zhao | Computer Graphics Developer"
       <div class="project-grid">
         <article class="project-card featured">
           <div class="project-copy">
-            <p class="project-type">Mobile Rendering</p>
-            <h3>Mobile GLSL Shader Showcase</h3>
+            <p class="project-type">Offline Rendering</p>
+            <h3>CUDA Path Tracer</h3>
             <p>
-              A collection of optimized real-time shader studies for stylized car paint, lava effects, animated cloud materials, water reflection, and low-cost in-game shadows.
+              GPU path tracing project focused on physically based light transport, BSDF material sampling, refraction, depth of field, OBJ mesh loading, HDR environment lighting, BVH acceleration, and performance optimization.
             </p>
             <ul class="project-points">
-              <li>Built shader effects for mobile-friendly runtime constraints.</li>
-              <li>Used mask textures, flow maps, vertex noise, and baked data to reduce cost.</li>
-              <li>Integrated preview media and code snippets for technical breakdowns.</li>
+              <li>Implemented CUDA kernels for ray generation, BSDF shading, scattering, and progressive accumulation.</li>
+              <li>Added refraction, stochastic antialiasing, depth of field, HDR environment maps, and OBJ mesh loading.</li>
+              <li>Optimized traversal and path processing with BVH acceleration, stream compaction, and material sorting.</li>
             </ul>
             <div class="tag-row compact">
-              <span>GLSL</span>
-              <span>HLSL</span>
-              <span>Unity</span>
-              <span>Mobile GPU</span>
+              <span>CUDA</span>
+              <span>C++</span>
+              <span>Path Tracing</span>
+              <span>BVH</span>
             </div>
-            <a class="text-link" href="/projects/mobile-glsl-shaders/">View full project</a>
+            <a class="text-link" href="/projects/cuda-path-tracer/">View full project</a>
           </div>
           <div class="project-media">
-            {% render "image", src: 'car/MainScene', caption: 'Stylized car paint shader', title: 'Car paint shader', class: 'full' %}
+            <figure class="project-card-media">
+              <img src="/assets/image/CUDA_PathTracer/Head.png" alt="CUDA path tracer rendered head result">
+              <figcaption>CUDA path traced render result</figcaption>
+            </figure>
           </div>
         </article>
 
         <article class="project-card">
-          <p class="project-type">Offline Rendering</p>
-          <h3>CUDA Path Tracer</h3>
+          <p class="project-type">Mobile Rendering</p>
+          <h3>Mobile GLSL Shader Showcase</h3>
           <p>
-            Path tracing project focused on physically based light transport, GPU parallelism, sampling, material models, and progressive rendering.
+            A collection of optimized real-time shader studies for stylized car paint, lava effects, animated cloud materials, water reflection, and low-cost in-game shadows.
           </p>
+          {% render "video_image", src: 'showCase', caption: 'Red flame car paint preview', class: 'card-preview' %}
           <div class="tag-row compact">
-            <span>CUDA</span>
-            <span>C++</span>
-            <span>PBR</span>
-            <span>Monte Carlo</span>
+            <span>GLSL</span>
+            <span>HLSL</span>
+            <span>Unity</span>
+            <span>Mobile GPU</span>
           </div>
-          <a class="text-link" href="/projects/cuda-path-tracer/">View full project</a>
-        </article>
-
-        <article class="project-card">
-          <p class="project-type">Software Rendering</p>
-          <h3>CPU Rasterizer</h3>
-          <p>
-            A software rasterization project for understanding the graphics pipeline from triangle setup to interpolation, depth testing, shading, and image output.
-          </p>
-          <div class="tag-row compact">
-            <span>C++</span>
-            <span>Rasterization</span>
-            <span>Math</span>
-            <span>Pipeline</span>
-          </div>
-          <a class="text-link" href="/projects/cpu-rasterizer/">View full project</a>
+          <a class="text-link" href="/projects/mobile-glsl-shaders/">View full project</a>
         </article>
 
         <article class="project-card">
           <p class="project-type">Graphics API</p>
-          <h3>Vulkan Renderer</h3>
+          <h3>Vulkan Grass Rendering</h3>
           <p>
-            Vulkan rendering experiments covering explicit GPU resources, command buffers, swapchain management, render passes, and shader-driven rendering.
+            Real-time Vulkan grass renderer with Bezier blade representation, procedural wind, culling optimizations, blade-count performance analysis, and tessellation-based LOD.
           </p>
+          <figure class="project-card-media compact-media">
+            <img src="/assets/image/Vulkan/headImg.webp" alt="Vulkan grass rendering preview">
+            <figcaption>Realtime Vulkan grass rendering preview</figcaption>
+          </figure>
           <div class="tag-row compact">
             <span>Vulkan</span>
-            <span>SPIR-V</span>
             <span>C++</span>
-            <span>GPU API</span>
+            <span>Culling</span>
+            <span>LOD</span>
           </div>
           <a class="text-link" href="/projects/vulkan-renderer/">View full project</a>
         </article>
 
         <article class="project-card">
-          <p class="project-type">Tools</p>
-          <h3>Technical Art Tools</h3>
+          <p class="project-type">GPU Path Tracing</p>
+          <h3>GLSL Path Tracer</h3>
           <p>
-            C++ and Python tools for image processing, cache export, Qt interfaces, Maya workflows, and Unreal integration.
+            GPU-accelerated global illumination path tracer implemented entirely in GLSL fragment shaders with OpenGL 3.3 and Qt 6 progressive accumulation.
           </p>
-          <div class="media-group">
-            {% render "image", src: 'tools/blurtool', caption: 'Multithreaded image blur tool', title: 'C++ image processing', class: 'thumb' %}
-            {% render "image", src: 'tools/qtPyside', caption: 'Python Qt tool UI', title: 'Python Qt tool', class: 'thumb' %}
-          </div>
+          <figure class="project-card-media compact-media">
+            <img src="/assets/image/GLSL_PathTracer/roughMirrorFull.png" alt="GLSL path tracer rough mirror render">
+            <figcaption>Rough mirror global illumination render</figcaption>
+          </figure>
           <div class="tag-row compact">
-            <span>C++</span>
-            <span>Python</span>
-            <span>Qt</span>
-            <span>Maya</span>
+            <span>GLSL</span>
+            <span>OpenGL</span>
+            <span>Qt 6</span>
+            <span>GI</span>
           </div>
+          <a class="text-link" href="/projects/cpu-rasterizer/">View full project</a>
         </article>
 
         <article class="project-card">
-          <p class="project-type">Technical Art</p>
-          <h3>Grooming, Rigging, and Production Rendering</h3>
+          <p class="project-type">Rigging Tool</p>
+          <h3>Meta Echo</h3>
           <p>
-            Grooming and rigging studies using Maya, Unreal Engine, MetaHuman DNA workflows, hair cards, dynamic bones, and production material workflows.
+            RBF-based automated facial rigging tool that retargets MetaHuman facial performance to custom cartoon characters and prepares them for Unreal Live Link animation.
           </p>
-          <div class="media-group">
-            {% render "image", src: 'grooming/longhair_unreal', caption: 'Unreal hair rendering', title: 'Hair rendering', class: 'thumb' %}
-            {% render "image", src: 'grooming/FFriggingTest', caption: 'Facial rigging test', title: 'Facial rigging', class: 'thumb' %}
-          </div>
+          <figure class="project-card-media compact-media">
+            <img src="/assets/image/MetaEcho/head_image.png" alt="Meta Echo facial rigging result">
+            <figcaption>Meta Echo facial rigging result</figcaption>
+          </figure>
           <div class="tag-row compact">
-            <span>Unreal</span>
+            <span>Python</span>
+            <span>RBF</span>
             <span>Maya</span>
-            <span>Grooming</span>
-            <span>Rigging</span>
+            <span>MetaHuman</span>
           </div>
+          <a class="text-link" href="/projects/meta-echo/">View full project</a>
+        </article>
+
+        <article class="project-card">
+          <p class="project-type">Rendering Optimization</p>
+          <h3>Terrain Shadow Optimization</h3>
+          <p>
+            Real-time shadow optimization scheme for an SNS community game, using render textures, baked directional shadow channels, and static batching to reduce runtime shadow cost.
+          </p>
+          <a class="project-badge" href="https://patents.google.com/patent/CN110517346B/zh?oq=CN110517346B">Patent CN110517346B</a>
+          <figure class="project-card-media compact-media">
+            <img src="/assets/image/house/cabinScene.webp" alt="SNS community game cabin scene with optimized shadows">
+            <figcaption>SNS game terrain shadow case</figcaption>
+          </figure>
+          <div class="tag-row compact">
+            <span>Unity</span>
+            <span>Shader</span>
+            <span>RenderTexture</span>
+            <span>Patent</span>
+          </div>
+          <a class="text-link" href="/projects/terrain-shadow/">View full project</a>
         </article>
       </div>
-    </section>
-
-    <section class="section-block">
-      <div class="section-heading">
-        <p class="eyebrow">Shader studies</p>
-        <h2>Realtime Material Demos</h2>
-      </div>
-
-      <div class="media-strip">
-        {% render "video_image", src: 'showCase', caption: 'Red flame car paint', class: 'strip-item' %}
-        {% render "video_image", src: 'showcase3', caption: 'Lava storm', class: 'strip-item' %}
-        {% render "video_image", src: 'stylizedCloud01', caption: 'Stylized cloud pass', class: 'strip-item' %}
-        {% render "video_image", src: 'WaveWater1', caption: 'Liquid wave reflection', class: 'strip-item' %}
-      </div>
-
-      <pre class="language-hlsl"><code>float speed = frac(_Time.x * _lavaSpeed);
-float4 wave = tex2D(_lavawaveTex, (i.texcoord.zw + float2(0, speed)) * 2) * 2 - 1;
-float4 lava = tex2D(_lavaTex, float2(i.texcoord.zw + wave.xy));
-float4 mask = tex2D(_lavaTex, i.texcoord.zw);
-lava = (lava.r + gas.g * _gasOffset.w) * _lavaCol * mask.g;</code></pre>
     </section>
 
     <section id="skills" class="section-block">
@@ -207,9 +202,22 @@ lava = (lava.r + gas.g * _gasOffset.w) * _lavaCol * mask.g;</code></pre>
           <h3>Game Engines</h3>
           <p>Unity, Unreal Engine 5, real-time material systems, mobile rendering, rendering optimization, gameplay visual effects.</p>
         </div>
+      </div>
+    </section>
+
+    <section id="experience" class="section-block two-column">
+      <div>
+        <p class="eyebrow">Experience</p>
+        <h2>Work Experience</h2>
+      </div>
+      <div class="timeline">
         <div>
-          <h3>Pipeline Tools</h3>
-          <p>Python, Qt / PySide, Maya tools, Substance Designer workflow, cache export, DCC-to-engine integration.</p>
+          <h3>Software Development Engineer Intern, AWS</h3>
+          <p>May 2025 - September 2025</p>
+        </div>
+        <div>
+          <h3>Graphics Engineer, Tencent Games</h3>
+          <p>July 2021 - October 2023</p>
         </div>
       </div>
     </section>

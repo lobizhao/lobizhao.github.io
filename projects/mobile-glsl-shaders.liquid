@@ -10,7 +10,7 @@ title: "Mobile GLSL Shader Showcase | Jiangman Zhao"
     <p class="eyebrow">Mobile Rendering</p>
     <h1>Mobile GLSL Shader Showcase</h1>
     <p>
-      A collection of real-time material studies focused on expressive visual results under mobile GPU constraints: stylized car paint, lava masks, animated clouds, liquid reflection, and low-cost dynamic shadows.
+      A collection of Unity real-time material studies built around mobile-friendly shader techniques: stylized car paint, lava flow masks, animated cloud surfaces, and liquid reflection waves.
     </p>
     <div class="tag-row">
       <span>GLSL</span>
@@ -24,46 +24,140 @@ title: "Mobile GLSL Shader Showcase | Jiangman Zhao"
   <section class="project-section">
     <h2>Overview</h2>
     <p>
-      This project explores shader techniques that create strong visual variation without expensive simulation or heavy texture memory. The work uses flow maps, baked masks, vertex noise, packed texture channels, and simple time-based animation to keep runtime cost manageable.
+      The goal of this shader collection is to create visually rich material motion without relying on expensive simulation. Most effects use authored masks, baked distance maps, packed texture channels, simple UV animation, and vertex-stage deformation to keep the runtime cost practical for mobile or game-engine use.
     </p>
-  </section>
-
-  <section class="project-section">
-    <h2>Visual Results</h2>
-    <div class="media-strip">
-      {% render "video_image", src: 'showCase', caption: 'Red flame car paint', class: 'strip-item' %}
-      {% render "video_image", src: 'showcase3', caption: 'Lava storm', class: 'strip-item' %}
-      {% render "video_image", src: 'stylizedCloud01', caption: 'Stylized cloud material', class: 'strip-item' %}
-      {% render "video_image", src: 'WaveWater1', caption: 'Liquid reflection', class: 'strip-item' %}
+    <div class="single-media">
+      <figure>
+        <img src="/assets/image/car/MainScene.webp" alt="Unity car paint shader scene">
+        <figcaption>Unity car paint shader scene.</figcaption>
+      </figure>
     </div>
   </section>
 
   <section class="project-section two-column">
     <div>
-      <h2>Technical Highlights</h2>
+      <p class="eyebrow">Material 1</p>
+      <h2>Car Paint and Lava Flow</h2>
     </div>
-    <div class="detail-list">
-      <div>
-        <h3>Mask-driven materials</h3>
-        <p>Used packed channels and baked distance information to localize effects and reduce texture lookups.</p>
+    <div>
+      <p>
+        The car paint shader uses a baked distance map from Substance as a mask to control where flame-like lava motion appears. A wave texture offsets the lava UVs over time, while a secondary gas/noise sample adds variation inside the masked region.
+      </p>
+      {% render "video_image", src: 'showCase', caption: 'Red flame car paint - WebM shader preview', class: 'full' %}
+      <div class="media-strip">
+        {% render "video_image", src: 'showcase3', caption: 'Lava Storm', class: 'strip-item' %}
+        {% render "video_image", src: 'showcase4', caption: 'Edge Loop', class: 'strip-item' %}
+        {% render "video_image", src: 'showcase5', caption: 'Dragon Scale', class: 'strip-item' %}
+        {% render "video_image", src: 'showcase7', caption: 'Stripe', class: 'strip-item' %}
       </div>
-      <div>
-        <h3>Animated surface variation</h3>
-        <p>Combined wave textures, flow offsets, and time-based UV animation for lava, water, and cloud motion.</p>
-      </div>
-      <div>
-        <h3>Mobile-friendly tradeoffs</h3>
-        <p>Favored simple sampling, channel packing, and authored masks over costly procedural simulation.</p>
-      </div>
+      <pre class="language-hlsl"><code>// Fragment shader snippet: animated lava mask.
+float speed = frac(_Time.x * _lavaSpeed);
+
+float2 waveUV = (i.texcoord.zw + float2(0.0, speed)) * 2.0;
+float wave = tex2D(_lavawaveTex, waveUV).r * 2.0 - 1.0;
+wave *= _lavaWave;
+
+float2 gasUV = float2(
+    i.texcoord.z * _gasOffset.x,
+    i.texcoord.w * _gasOffset.y + frac(_Time.y * _gasOffset.z)
+);
+
+float gas = tex2D(_lavawaveTex, gasUV).g;
+float lava = tex2D(_lavaTex, i.texcoord.zw + wave.xx).r;
+float mask = tex2D(_lavaTex, i.texcoord.zw).g;
+
+float4 lavaColor = (lava + gas * _gasOffset.w) * _lavaCol * mask;</code></pre>
     </div>
   </section>
 
-  <section class="project-section">
-    <h2>Shader Snippet</h2>
-    <pre class="language-hlsl"><code>float speed = frac(_Time.x * _lavaSpeed);
-float4 wave = tex2D(_lavawaveTex, (i.texcoord.zw + float2(0, speed)) * 2) * 2 - 1;
-float4 lava = tex2D(_lavaTex, float2(i.texcoord.zw + wave.xy));
-float4 mask = tex2D(_lavaTex, i.texcoord.zw);
-lava = (lava.r + gas.g * _gasOffset.w) * _lavaCol * mask.g;</code></pre>
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Material 2</p>
+      <h2>Stylized Cloud Material</h2>
+    </div>
+    <div>
+      <p>
+        The stylized cloud shader generates soft surface motion by sampling noise in object/world-related directions and applying the result in the vertex stage. This keeps the fragment stage relatively simple while making the silhouette feel alive.
+      </p>
+      <div class="comparison-grid">
+        {% render "video_image", src: 'stylizedCloud01', caption: 'Stylized multiple pass', class: 'strip-item' %}
+        {% render "video_image", src: 'stylizedCloud02', caption: 'Vertex noise deformation', class: 'strip-item' %}
+      </div>
+      <pre class="language-hlsl"><code>// Vertex shader snippet: triplanar-style noise displacement.
+float speed = frac(_Time.y * _speed);
+float3 blend = v.vertex.xyz * _scale;
+
+float noiseXY = tex2Dlod(_Noise, float4(blend.xy + speed, 0.0, 0.0)).r;
+float noiseYZ = tex2Dlod(_Noise, float4(blend.yz + speed, 0.0, 0.0)).r;
+float noiseXZ = tex2Dlod(_Noise, float4(blend.xz + speed, 0.0, 0.0)).r;
+
+float noise = noiseXY;
+noise = lerp(noise, noiseXZ, saturate(o.normal.y));
+noise = lerp(noise, noiseYZ, saturate(o.normal.x));
+noise *= v.color.r;
+
+v.vertex.xyz += v.normal * noise * _range;
+o.pos = UnityObjectToClipPos(v.vertex);</code></pre>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Material 3</p>
+      <h2>Liquid Wave Reflection</h2>
+    </div>
+    <div>
+      <p>
+        The liquid material uses a flow map to offset projected reflection sampling. Two time-shifted reflection samples are blended to avoid visible resets, while a mask texture controls transparency and reflection strength.
+      </p>
+      <div class="comparison-grid">
+        {% render "video_image", src: 'WaveWater1', caption: 'Liquid wave reflection 1', class: 'strip-item' %}
+        {% render "video_image", src: 'WaveWater2', caption: 'Liquid wave reflection 2', class: 'strip-item' %}
+      </div>
+      <pre class="language-hlsl"><code>fixed4 frag(v2f i) : SV_Target
+{
+    float speed = frac(_Time.y * _speed);
+    float2 flowUV = float2(i.texcoord.x * _offset.x + speed,
+                           i.texcoord.y * _offset.y);
+
+    float2 flowDir = tex2D(_fmap, flowUV).rg * 2.0 - 1.0;
+    flowDir *= _strength;
+
+    float offset0 = frac(_Time.w * 0.5 + 0.5);
+    float offset1 = frac(_Time.w * 0.5 + 1.0);
+    float blendValue = abs((0.5 - offset0) / 0.5);
+
+    fixed mask = tex2D(_MaskTex, i.texcoord).r;
+    fixed4 refl0 = tex2Dproj(_ReflectionTex,
+        UNITY_PROJ_COORD(i.refl) + float4(flowDir * offset0, 0.0, 0.0));
+    fixed4 refl1 = tex2Dproj(_ReflectionTex,
+        UNITY_PROJ_COORD(i.refl) + float4(flowDir * offset1, 0.0, 0.0));
+
+    fixed4 refl = lerp(refl0, refl1, blendValue);
+    refl.a *= mask * _Alpha * i.color.a;
+    return refl;
+}</code></pre>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Takeaways</p>
+      <h2>Mobile-Friendly Shader Strategy</h2>
+    </div>
+    <div class="detail-list">
+      <div>
+        <h3>Author data offline</h3>
+        <p>Use Substance or DCC tools to bake masks and distance maps instead of deriving everything procedurally at runtime.</p>
+      </div>
+      <div>
+        <h3>Animate with cheap texture motion</h3>
+        <p>Flow maps, time offsets, and dual-sample blending can produce convincing motion with predictable shader cost.</p>
+      </div>
+      <div>
+        <h3>Move work to the vertex stage when possible</h3>
+        <p>For stylized deformation, vertex displacement can create strong visual motion while keeping fragment shading simpler.</p>
+      </div>
+    </div>
   </section>
 </article>

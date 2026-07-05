@@ -1,0 +1,116 @@
+---
+layout: layout.liquid
+title: "Meta Echo | Jiangman Zhao"
+---
+
+<article class="project-page">
+  <a class="back-link" href="/#projects">Back to projects</a>
+
+  <header class="project-hero">
+    <p class="eyebrow">Rigging Tool</p>
+    <h1>Meta Echo</h1>
+    <p>
+      Automated facial rigging from MetaHuman to custom characters. Meta Echo helps developers without rigging or animation expertise transfer high-quality facial performance to stylized characters and drive them through Unreal Live Link.
+    </p>
+    <div class="tag-row">
+      <span>Python</span>
+      <span>Maya</span>
+      <span>RBF</span>
+      <span>MetaHuman</span>
+      <span>Unreal Live Link</span>
+    </div>
+    <div class="project-actions">
+      <a class="button primary" href="https://github.com/lobizhao/MetaEcho">View Code on GitHub</a>
+    </div>
+  </header>
+
+  <section class="project-section">
+    <h2>Problem</h2>
+    <p>
+      MetaHuman delivers strong facial performance through Live Link, but most developers cannot manually key high-quality facial animation. Traditional facial rigging is difficult, slow, and requires specialized rigging or animation skills.
+    </p>
+  </section>
+
+  <section class="project-section">
+    <h2>Solution</h2>
+    <p>
+      Meta Echo connects cartoon and custom characters to MetaHuman-style facial rigs. The tool automates the core rigging workflow so a developer can quickly generate facial joints, transfer weights, constrain the new skeleton, and use MetaHuman animation data to drive the target character.
+    </p>
+    <figure class="project-result">
+      <img src="/assets/image/MetaEcho/head_image.png" alt="Meta Echo facial rigging result">
+      <figcaption>Meta Echo facial rigging result on a custom character.</figcaption>
+    </figure>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Core Method</p>
+      <h2>RBF-Based Retargeting</h2>
+    </div>
+    <div>
+      <p>
+        The core engine is based on Radial Basis Function interpolation, inspired by the SIGGRAPH 2000 paper <em>Pose Space Deformation</em>. Unlike simple linear rigging, RBF supports non-linear deformation, which is important for facial expressions because face motion is curved, complex, and topology dependent.
+      </p>
+      <p>
+        In Meta Echo, the RBF solver acts as a mathematical bridge between the MetaHuman source mesh and a custom target mesh. It builds a mapping matrix that helps transfer rigging structure and animation behavior across different facial proportions and mesh topologies.
+      </p>
+      <figure class="project-result">
+        <img src="/assets/image/MetaEcho/RBF_Tool.png" alt="Meta Echo RBF tool interface">
+        <figcaption>RBF solver and retargeting tool interface.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Workflow</p>
+      <h2>Automated Rigging Pipeline</h2>
+    </div>
+    <div class="detail-list">
+      <div>
+        <h3>1. Load Source and Target</h3>
+        <p>Load the original MetaHuman head as the source and the custom cartoon face as the target.</p>
+      </div>
+      <div>
+        <h3>2. Build Solver</h3>
+        <p>Generate the RBF mapping matrix that bridges the source and target meshes.</p>
+      </div>
+      <div>
+        <h3>3. Retarget Skeleton</h3>
+        <p>Select the source skeleton and target mesh, then generate new joints that fit the custom character.</p>
+      </div>
+      <div>
+        <h3>4. Bind and Copy Skin Weights</h3>
+        <p>Bind the target mesh to the generated joints and transfer professional MetaHuman skin weight data.</p>
+      </div>
+      <div>
+        <h3>5. Joint Constraint</h3>
+        <p>Connect MetaHuman animation data to the generated skeleton through constraint logic.</p>
+      </div>
+      <div>
+        <h3>6. Drive with Live Link</h3>
+        <p>Use the GUI panel or Unreal Live Link Control Rig data to drive the cartoon character with synced facial animation.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="project-section two-column">
+    <div>
+      <p class="eyebrow">Environment</p>
+      <h2>Requirements and Usage</h2>
+    </div>
+    <div>
+      <ul class="project-points">
+        <li>Autodesk Maya with Python support</li>
+        <li>Python packages: <code>numpy</code>, <code>scipy</code></li>
+        <li>MetaHuman source project</li>
+        <li>Unreal Engine Live Link facial animation workflow</li>
+      </ul>
+
+      <pre class="language-python"><code>import metaEcho_RunTool
+
+tool = metaEcho_RunTool.MetaEchoFullToolbox()
+tool.show()</code></pre>
+    </div>
+  </section>
+</article>
